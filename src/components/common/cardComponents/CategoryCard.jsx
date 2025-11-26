@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Diengcategory from '../../../assets/banner/1.png';
 import Wisatalamcategory from '../../../assets/category/Telaga Dringo.jpg'
-import Mricacategory from '../../../assets/category/Mricacategory.jpeg'
+import Mricacategory from '../../../assets/category/MricaCategory.jpeg'
 import CurugCategory from '../../../assets/category/CurugCategory.jpeg'
 
 const kategoriList = [
@@ -64,7 +64,6 @@ const CategoryCard = () => {
         msOverflowStyle: 'none',
         cursor: isDragging ? 'grabbing' : 'grab',
         userSelect: 'none',
-        cursor: 'pointer',
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
