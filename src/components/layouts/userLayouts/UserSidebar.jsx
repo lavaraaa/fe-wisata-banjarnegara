@@ -12,7 +12,6 @@ const UserSidebar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { showNotif } = useNotifikasi();
-
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);

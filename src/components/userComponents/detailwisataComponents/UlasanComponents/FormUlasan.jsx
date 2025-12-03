@@ -124,6 +124,7 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
       {/* Textarea + tombol */}
       <div style={{ display:'flex', alignItems:'flex-end', marginTop:10 }}>
         <textarea
+        className="flex-1 border rounded px-2 py-1 text-sm"
           placeholder="Tulis ulasan (opsional)"
           value={review}
           rows={2}
@@ -131,13 +132,16 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
           style={{ maxWidth:260, flexGrow:1, marginRight:10 }}
         />
         {!isEditing && (
-          <button style={{ color:'#fff', backgroundColor:'#015E78' }} onClick={handleSubmit}>Kirim</button>
+          <button  className="ms-3 px-3 py-1 rounded"
+          style={{ color:'#fff', backgroundColor:'#015E78' }} onClick={handleSubmit}>Kirim</button>
         )}
       </div>
 
       {isEditing && (
         <div style={{ marginTop:10, display:'flex', gap:10, marginLeft:70 }}>
-          <button onClick={() => { setIsEditing(false); onCancel?.(); }}>Batal</button>
+          <button 
+           className="ms-3 px-3 py-1 rounded"
+          onClick={() => { setIsEditing(false); onCancel?.(); }}>Batal</button>
           <button style={{ color:'#fff', backgroundColor:'#015E78' }} onClick={handleSubmit}>Perbarui Ulasan</button>
         </div>
       )}

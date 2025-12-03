@@ -26,18 +26,18 @@
 body {
   font-family: 'Outfit', sans-serif;
 }
-body.modal-open {
-  overflow: hidden; 
+/* body.modal-open {
+  overflow: hidden;
 }
 
-/* html {
+html {
   overflow-y: scroll;
 } */
 
-.lock-scroll {
-  overflow-y: hidden; 
+/* .lock-scroll {
+  overflow-y: hidden;  
 }
-
+ */
 
 :root {
     --primary-color: #f0f0f0;
