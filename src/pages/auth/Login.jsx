@@ -62,7 +62,8 @@ const handleChange = (e) => {
          placeholder="Masukkan Kata Sandi" style={{fontSize:'15px'}}/>
       </div>
           
-        <button className="btn btn-dark w-100" type="submit">Login</button></form>
+        <button className="btn btn-dark w-100" type="submit">Login</button>
+        </form>
           <p className="text-center mt-2"> Belum punya akun?{' '}
           <button type="button" onClick={() => {
               onClose();
@@ -79,14 +80,17 @@ const handleChange = (e) => {
 
 const styles = {
   overlay: { 
-    position: 'fixed', 
-    top: 0, left: 0, 
-    width: '100vw', 
-    height: '100vh', 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    display: 'flex', justifyContent: 'center', 
-    alignItems: 'center', 
-    zIndex: 9999
+     position: 'fixed',
+    top: 0, left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1600,
+    overflowY: 'auto',
+    padding: '10px',
   },
 
   card: { 
@@ -101,6 +105,7 @@ const styles = {
     margin: '10px',
     maxHeight: '90vh',
     overflowY: 'auto',
+    paddingBottom: 5
   }};
 
 export default Login;

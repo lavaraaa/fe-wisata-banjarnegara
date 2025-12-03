@@ -36,13 +36,13 @@ const Register = ({ show, onClose, toLogin }) => {
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
-        <button className="btn-close float-end mt-2" onClick={onClose}></button>
-        <h4 className="text-center mb-2">Register</h4>
+        <button className="btn-close float-end mt-1" onClick={onClose}></button>
+        <h4 className="text-center mb-1">Register</h4>
 
         {message && <div className="alert alert-info">{message}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-2">
+          <div className="mb-1">
             <label className="form-label">Username</label>
             <input 
               name="username" 
@@ -55,7 +55,7 @@ const Register = ({ show, onClose, toLogin }) => {
               style={{fontSize:'15px'}}
             />
           </div>
-          <div className="mb-2">
+          <div className="mb-1">
             <label className="form-label">Email</label>
             <input 
               name="email" 
@@ -68,7 +68,7 @@ const Register = ({ show, onClose, toLogin }) => {
               style={{fontSize:'15px'}}
             />
           </div>
-          <div className="mb-2">
+          <div className="mb-3">
             <label className="form-label">Kata Sandi</label>
             <input 
               name="password" 
@@ -92,7 +92,7 @@ const Register = ({ show, onClose, toLogin }) => {
               onClose();
               toLogin();
             }}
-            className="btn btn-link p-0 mb-1"
+            className="btn btn-link p-0 mb-2"
             style={{ fontWeight: 600 }}
           >
             Login
@@ -129,6 +129,7 @@ const styles = {
     margin: '10px',
     maxHeight: '90vh',
     overflowY: 'auto',
+    paddingBottom: 5
   },
 };
 
