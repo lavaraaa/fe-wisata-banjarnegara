@@ -50,8 +50,7 @@ const Register = ({ show, onClose, toLogin }) => {
               className="form-control" 
               value={formData.username} 
               onChange={handleChange} 
-              required 
-              autoFocus
+              required
               placeholder="Masukkan Username"
               style={{fontSize:'15px'}}
             />
