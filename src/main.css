@@ -61,8 +61,7 @@ html {
   }
   
   .navbar-brand {
-    font-weight: bold;
-    color: var(--navbar-color-text) !important; /* Warna teks logo atau nama web */
+    color: var(--navbar-color-text) !important;
   }
   
   .navbar-toggler-icon {
