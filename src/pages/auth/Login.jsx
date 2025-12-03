@@ -86,14 +86,21 @@ const styles = {
     backgroundColor: 'rgba(0,0,0,0.5)', 
     display: 'flex', justifyContent: 'center', 
     alignItems: 'center', 
-    zIndex: 9999},
+    zIndex: 9999
+  },
 
-  card: { background: '#fff', 
-    padding: '20px', 
-    borderRadius: '10px', 
+  card: { 
+    background: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
     width: '100%',
-    maxWidth: '370px', 
-    position: 'relative', 
-    boxShadow: '0 0 20px rgba(0,0,0,0.3)'}};
+    maxWidth: '370px',
+    position: 'relative',
+    boxShadow: '0 0 20px rgba(0,0,0,0.3)',
+    zIndex: 1500,
+    margin: '10px',
+    maxHeight: '90vh',
+    overflowY: 'auto',
+  }};
 
 export default Login;
