@@ -34,7 +34,7 @@ const Register = ({ show, onClose, toLogin }) => {
   if (!show) return null;
 
   return (
-    <div style={styles.overlay} onClick={onClose}>
+<div style={styles.overlay} onClick={onClose}>
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
         <button className="btn-close float-end mt-1" onClick={onClose}></button>
         <h4 className="text-center mb-1">Register</h4>
@@ -51,6 +51,7 @@ const Register = ({ show, onClose, toLogin }) => {
               value={formData.username} 
               onChange={handleChange} 
               required
+              autoFocus
               placeholder="Masukkan Username"
               style={{fontSize:'15px'}}
             />

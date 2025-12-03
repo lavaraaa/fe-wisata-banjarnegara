@@ -48,9 +48,14 @@ const handleChange = (e) => {
 
       <div className="mb-1">
         <label className="form-label">Email atau Username</label>
-          <input name="identifier" type="text" className="form-control"
+          <input 
+          autoFocus
+          name="identifier" 
+          type="text" 
+          className="form-control"
               value={formData.identifier} onChange={handleChange}
               required
+            
               placeholder="Masukkan Username/Email" style={{fontSize:'15px'}}/>
       </div>
 

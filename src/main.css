@@ -27,15 +27,15 @@ body {
   font-family: 'Outfit', sans-serif;
 }
 body.modal-open {
-  overflow: hidden; /* matikan scroll tapi tetap ada layout */
+  overflow: hidden; 
 }
 
-html {
+/* html {
   overflow-y: scroll;
-}
-/* class untuk mengunci scroll tapi scroll bar tetap ada */
+} */
+
 .lock-scroll {
-  overflow-y: hidden;  /* matikan scroll konten */
+  overflow-y: hidden; 
 }
 
 
