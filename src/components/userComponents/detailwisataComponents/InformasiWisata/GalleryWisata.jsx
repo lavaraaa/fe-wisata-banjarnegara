@@ -53,46 +53,48 @@ const GalleryModal = ({ onUpdate }) => {
           }}
         >
           {/* Gambar wisata */}
-          {wisata.galeri &&
-            Array.isArray(JSON.parse(wisata.galeri)) &&
-            JSON.parse(wisata.galeri).map((img, idx) => (
-              <img
-                key={idx}
-                src={`http://localhost:3000/uploads/${img}`}
-                alt="galeri"
-                style={{
-                  width: "clamp(100px,2.5vw,130px)",
-                  height: "clamp(100px,2.5vw,130px)",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  cursor: "pointer"
-                }}
-                onClick={() =>
-                  openPreview(`http://localhost:3000/uploads/${img}`)
-                }
-              />
-            ))}
+        {wisata.galeri &&
+  Array.isArray(JSON.parse(wisata.galeri)) &&
+  JSON.parse(wisata.galeri).map((img, idx) => (
+    <img
+      key={idx}
+      src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/${img}`}
+      alt="galeri"
+      style={{
+        width: "clamp(100px,2.5vw,130px)",
+        height: "clamp(100px,2.5vw,130px)",
+        objectFit: "cover",
+        borderRadius: "10px",
+        cursor: "pointer"
+      }}
+      onClick={() =>
+        openPreview(`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/${img}`)
+      }
+    />
+  ))}
+
 
           {/* Gambar ulasan */}
-          {ulasan.map((u) =>
-            JSON.parse(u.images || "[]").map((f, i) => (
-              <img
-                key={`${u.id}-${i}`}
-                src={`http://localhost:3000/uploads/ulasan/${f}`}
-                alt="ulasan"
-                style={{
-                  width: "clamp(100px,5vw,180px)",
-                  height: "clamp(100px,5vw,180px)",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  cursor: "pointer"
-                }}
-                onClick={() =>
-                  openPreview(`http://localhost:3000/uploads/ulasan/${f}`)
-                }
-              />
-            ))
-          )}
+         {ulasan.map((u) =>
+  JSON.parse(u.images || "[]").map((f, i) => (
+    <img
+      key={`${u.id}-${i}`}
+      src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${f}`}
+      alt="ulasan"
+      style={{
+        width: "clamp(100px,5vw,180px)",
+        height: "clamp(100px,5vw,180px)",
+        objectFit: "cover",
+        borderRadius: "10px",
+        cursor: "pointer"
+      }}
+      onClick={() =>
+        openPreview(`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${f}`)
+      }
+    />
+  ))
+)}
+
         </div>
       </div>
 

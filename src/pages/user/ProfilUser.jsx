@@ -50,47 +50,56 @@ const ProfilUser = () => {
   }, []);
 
   const handleFotoChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const formData = new FormData();
-    formData.append('photo', file);
+  const formData = new FormData();
+  formData.append('photo', file);
 
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.post('http://localhost:3000/api/update-photo', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.post('http://localhost:3000/api/update-photo', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
-      setUser((prev) => ({
-        ...prev,
-        photoURL: res.data.photoURL,
-      }));
-       showNotif('Foto Profil Berhasil Diperbarui', 'success');
-    } 
-    catch (err) {
-      console.error('Gagal upload foto:', err.response?.data || err.message);
-    }
-  };
+    // Pakai URL baru dari BE + cache-busting
+    const newPhotoURL = res.data.photoURL + '?t=' + Date.now();
 
-  const handleDeletePhoto = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:3000/api/delete-photo', {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    setUser((prev) => ({
+      ...prev,
+      photoURL: newPhotoURL,
+    }));
 
-      setShowConfirmDelete(false);
-      setShowPreview(false);
-      await fetchUser(token);
-      showNotif('Foto Profil Berhasil Dihapus', 'success');
-    } catch (err) {
-      console.error('Gagal hapus foto:', err);
-    }
-  };
+    showNotif('Foto Profil Berhasil Diperbarui', 'success');
+  } catch (err) {
+    console.error('Gagal upload foto:', err.response?.data || err.message);
+  }
+};
+
+const handleDeletePhoto = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.post('http://localhost:3000/api/delete-photo', {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // langsung update state
+    setUser((prev) => ({
+      ...prev,
+      photoURL: null,
+    }));
+
+    setShowConfirmDelete(false);
+    setShowPreview(false);
+
+    showNotif('Foto Profil Berhasil Dihapus', 'success');
+  } catch (err) {
+    console.error('Gagal hapus foto:', err);
+  }
+};
 
  if (loading) return <Loading />;
 
@@ -110,21 +119,21 @@ const ProfilUser = () => {
         className="position-relative d-inline-block"
         style={{ width: '100px', height: '100px' }}
       >
-        <img
-          src={user.photoURL || profilePlaceholder}
-          alt="Foto Profil"
-          className="rounded-circle"
-          style={{
-            width: '100px',
-            height: '100px',
-            objectFit: 'cover',
-            // border: '2px solid #ccc',
-            cursor: isDefaultPhoto ? 'pointer' : 'pointer',
-          }}
-          onClick={() => {
-            if (!isDefaultPhoto) setShowPreview(true);
-          }}
-        />
+       <img
+  src={user.photoURL ? `${user.photoURL}?t=${Date.now()}` : profilePlaceholder}
+  alt="Foto Profil"
+  className="rounded-circle"
+  style={{
+    width: '100px',
+    height: '100px',
+    objectFit: 'cover',
+    cursor: 'pointer',
+  }}
+  onClick={() => {
+    if (!isDefaultPhoto) setShowPreview(true);
+  }}
+/>
+
 
         {/* OVERLAY “+” jika foto masih default */}
         {isDefaultPhoto && (

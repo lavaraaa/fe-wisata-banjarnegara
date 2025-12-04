@@ -60,11 +60,16 @@ const ProfilModal = () => {
       >
         <img
           src={user.photoURL?.trim() ? user.photoURL : profilePlaceholder}
-          alt="Profile"
-          className="rounded-circle me-2"
-          width="50"
-          height="50"
-        />
+          width={40}
+              height={40}
+              style={{ width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0
+               }}
+              alt="Foto Profil"
+            />
         {/* <div className="d-flex flex-column">
           <span style={{ fontWeight: '700', color: '#015E78' }}>{user.username}</span>
           <small className="text-muted">{sensorEmail(user.email)}</small>

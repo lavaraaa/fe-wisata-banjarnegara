@@ -34,8 +34,8 @@ const GambarWisata = () => {
       }}
     >
       <img
-        src={`http://localhost:3000/uploads/${gambar}`}
-        alt={judul}
+       src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/${gambar}`}
+  alt={judul}
         style={{
           width: '100%',
           height: 'auto',

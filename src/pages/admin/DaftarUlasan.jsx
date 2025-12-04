@@ -145,17 +145,18 @@ const DaftarUlasan = () => {
                       ) : '-'}
                     </td>
                     <td style={td}>{item.review || '-'}</td>
-                    <td style={td}>
-                      {gambar?.length ? (
-                        <img
-                          src={`http://localhost:3000/uploads/ulasan/${gambar[0]}`}
-                          alt="gambar ulasan"
-                          style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6 }}
-                        />
-                      ) : (
-                        <span style={{ color: '#aaa', fontStyle: 'italic' }}>Tidak ada</span>
-                      )}
-                    </td>
+                   <td style={td}>
+  {gambar?.length ? (
+    <img
+      src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${gambar[0]}`}
+      alt="gambar ulasan"
+      style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6 }}
+    />
+  ) : (
+    <span style={{ color: '#aaa', fontStyle: 'italic' }}>Tidak ada</span>
+  )}
+</td>
+
                     <td style={td}>{new Date(item.created_at).toLocaleDateString('id-ID')}</td>
                     <td style={td}>
                       <button

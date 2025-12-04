@@ -23,6 +23,12 @@ const LihatProfil = () => {
         const res = await axios.get(`/api/users/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        
+        // Tambahkan cache-busting untuk foto Supabase
+        let photoURL = res.data.photoURL;
+        if (photoURL) photoURL += '?t=' + new Date().getTime();
+
+        setUser({ ...res.data, photoURL });
         setUser(res.data);
       } catch (err) {
         console.error('Gagal ambil data user:', err);
@@ -56,18 +62,19 @@ const LihatProfil = () => {
   return (
     <div className="container mt-3 text-center">
       <img
-        src={user.photoURL || profilePlaceholder}
-        alt="Foto Profil"
-        className="rounded-circle"
-        style={{
-          width: '80px',
-          height: '80px',
-          objectFit: 'cover',
-          border: '2px solid #ccc',
-          cursor: user.photoURL ? 'pointer' : 'default',
-        }}
-        onClick={() => user.photoURL && setShowPreview(true)}
-      />
+    src={user.photoURL || profilePlaceholder}
+    alt="Foto Profil"
+    className="rounded-circle mx-auto"
+    style={{
+      width: '80px',
+      height: '80px',
+      objectFit: 'cover',
+      border: '2px solid #ccc',
+      cursor: user.photoURL ? 'pointer' : 'default',
+      display: 'block'  // wajib biar mx-auto jalan
+    }}
+    onClick={() => user.photoURL && setShowPreview(true)}
+  />
 
       <h5 className="mt-2">{user.username}</h5>
     <div

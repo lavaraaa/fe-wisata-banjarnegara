@@ -99,10 +99,15 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
           const file = total[idx];
           return file ? (
             <div key={idx} style={{ width:80, height:80, borderRadius:8, overflow:'hidden', position:'relative' }}>
-              <img
-                src={typeof file === 'string' ? `http://localhost:3000/uploads/ulasan/${file}` : URL.createObjectURL(file)}
-                style={{ width:'100%', height:'100%', objectFit:'cover' }}
-              />
+             <img
+  src={
+    typeof file === 'string'
+      ? `https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${file}`
+      : URL.createObjectURL(file)
+  }
+  style={{ width:'100%', height:'100%', objectFit:'cover' }}
+/>
+
               <span
                 onClick={() => {
                   if(typeof file === 'string') setPreview(prev => prev.filter(p=>p!==file));

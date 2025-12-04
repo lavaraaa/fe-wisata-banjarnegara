@@ -76,8 +76,8 @@ const CardWisata = ({ item, onActionSuccess }) => {
         >
           <div style={{ position: 'relative' }}>
             <img
-              src={`http://localhost:3000/uploads/${item.gambar}`}
-              alt={item.judul}
+               src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/${item.gambar}`}
+  alt={item.judul}
               style={{ width: '100%', height: '200px', objectFit: 'cover' }}
             />
             <div

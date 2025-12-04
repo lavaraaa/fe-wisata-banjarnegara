@@ -144,8 +144,23 @@ const openPreview = (imgUrl) => {
           <div key={u.id} style={{ borderBottom:'1px solid #ccc', marginBottom:5, position:'relative', padding:10 }}>
             <div 
             onClick={() => handleProfileClick(u.user_id)}
-            style={{ display:'flex', alignItems:'center', gap:10 }}>
-              <img src={u.photoURL?.trim()?u.photoURL:profilePlaceholder} width={40} height={40} style={{ borderRadius:'50%', objectFit:'cover' }} alt=""/>
+            style={{ 
+              display:'flex',
+               alignItems:'center', 
+               gap:10 }}>
+              
+              <img 
+              src={u.photoURL?.trim()?u.photoURL:profilePlaceholder} 
+              width={40} 
+              height={40} 
+              style={{  
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0  }} 
+                alt=""/>
+              
               <div style={{ display:'flex', flexDirection:'column' }}>
                 <b style={{ color:'#015E78', fontSize:16 }}>@{u.username}</b>
                 <p style={{ fontSize:'12px', color:'#888', marginBottom:0 }}>{formatWaktu(u.created_at)}</p>
@@ -162,12 +177,27 @@ const openPreview = (imgUrl) => {
             </div>
 
             <p style={{ wordWrap:'break-word', whiteSpace:'pre-wrap', overflowWrap:'break-word', maxWidth:'100%', marginLeft:50 }}>{u.review}</p>
-            <div style={{ marginLeft:50 }}>{JSON.parse(u.images||'[]').map(f=><img key={f} src={`http://localhost:3000/uploads/ulasan/${f}`} 
-            width={80} height={80} style={{ marginRight:6, marginBottom:8, borderRadius:5 }}    onClick={() =>
-                  openPreview(`http://localhost:3000/uploads/ulasan/${f}`)
-                } alt=""/>)}
-            
-            </div>
+           <div style={{ marginLeft: 50 }}>
+  {JSON.parse(u.images || '[]').map(f => (
+    <img
+      key={f}
+      src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${f}`}
+      width={80}
+      height={80}
+      style={{ 
+        width: '80px',
+        height: '80px',
+        marginRight: 6,
+        marginBottom: 8,
+        borderRadius: 5 }}
+      onClick={() =>
+        openPreview(`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${f}`)
+      }
+      alt=""
+    />
+  ))}
+</div>
+
           </div>
         ))}
 

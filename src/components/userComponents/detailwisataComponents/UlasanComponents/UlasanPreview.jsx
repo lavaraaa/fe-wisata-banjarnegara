@@ -120,7 +120,12 @@ const UlasanPreview = () => {
                     src={u.photoURL?.trim() ? u.photoURL : profilePlaceholder}
                     width={40}
                     height={40}
-                    style={{ borderRadius: '50%' }}
+                    style={{ 
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    flexShrink: 0 }}
                     alt="Foto Profil"
                   />
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -138,22 +143,25 @@ const UlasanPreview = () => {
                   </div>
                 </div>
                 <p style={{ wordWrap:'break-word', whiteSpace:'pre-wrap', overflowWrap:'break-word',marginLeft: 50 }}>{u.review}</p>
-                <div style={{ marginLeft: 50 }}>
-                  {JSON.parse(u.images || '[]').map(f => (
-                    <img
-                      key={f}
-                      src={`http://localhost:3000/uploads/ulasan/${f}`}
-                      width={80}
-                      height={80}
-                      style={{
-                        marginRight: 6,
-                        marginBottom: '8px',
-                        borderRadius: '5px',
-                      }}
-                      alt=""
-                    />
-                  ))}
-                </div>
+               <div style={{ marginLeft: 50 }}>
+  {JSON.parse(u.images || '[]').map(f => (
+    <img
+      key={f}
+      src={`https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${f}`}
+      width={80}
+      height={80}
+      style={{
+        width: '80px',
+        height: '80px',
+        marginRight: 6,
+        marginBottom: '8px',
+        borderRadius: '5px',
+      }}
+      alt=""
+    />
+  ))}
+</div>
+
                 <div
               style={{
                 borderTop: '1px solid #ccc',

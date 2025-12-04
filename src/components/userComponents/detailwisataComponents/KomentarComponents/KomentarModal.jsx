@@ -260,7 +260,12 @@ const resetLaporModal = () => {
               src={komentar.photoURL?.trim() ? komentar.photoURL : profilePlaceholder}
               width={40}
               height={40}
-              style={{ borderRadius: '50%', objectFit: 'cover' }}
+              style={{ width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0
+               }}
               alt="Foto Profil"
             />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -396,7 +401,13 @@ const renderBalasan = (komentar, parentKomentar) => {
               src={komentar.photoURL?.trim() ? komentar.photoURL : profilePlaceholder}
               width={25}
               height={25}
-              style={{ borderRadius: '50%', objectFit: 'cover' }}
+              style={{ 
+                width: '25px',
+                height: '25px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0
+               }}
               alt="Foto Profil"
             />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
