@@ -9,6 +9,13 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { BrowserRouter } from "react-router-dom";
 import { NotifikasiProvider } from '../src/components/common/Notifikasi';
 import { AuthProvider } from './pages/auth/AuthContext';
+import logoputih from './assets/logoputih.png';
+
+const link = document.createElement("link");
+link.rel = "icon";
+link.type = "image/png";
+link.href = logoputih;
+document.head.appendChild(link);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
