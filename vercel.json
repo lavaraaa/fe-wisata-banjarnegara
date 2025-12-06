@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://be-wisata-banjarnegara.vercel.app/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
