@@ -32,8 +32,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [draftKategori, setDraftKategori] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Sort states: draft = sementara saat centang di dropdown, sortTerpilih = final yang dipakai saat TERAPKAN
   const [draftSort, setDraftSort] = useState('');
   const [sortTerpilih, setSortTerpilih] = useState('');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -62,7 +60,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const fetchDataWisata = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/wisata');
+      const res = await fetch('/api/wisata');
       const wisataData = await res.json();
       setWisataList(wisataData);
       setAllWisata(wisataData);

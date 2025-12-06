@@ -18,8 +18,8 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
     }
 
     const endpoint = liked
-      ? 'http://localhost:3000/api/user/unlike'
-      : 'http://localhost:3000/api/user/like';
+      ? '/api/user/unlike'
+      : '/api/user/like';
 
     try {
       const res = await fetch(endpoint, {
@@ -50,8 +50,8 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
     }
 
     const endpoint = favorited
-      ? 'http://localhost:3000/api/user/unfavorit'
-      : 'http://localhost:3000/api/user/favorit';
+      ? '/api/user/unfavorit'
+      : '/api/user/favorit';
 
     try {
       const res = await fetch(endpoint, {
@@ -92,7 +92,7 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
     const fetchStatus = async () => {
       if (!token) return;
       try {
-        const res = await fetch(`http://localhost:3000/api/user/status/${id}`, {
+        const res = await fetch(`/api/user/status/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -116,7 +116,7 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
 
         const fetchTotalFavorit = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/total-favorit/${id}`);
+        const res = await fetch(`/api/total-favorit/${id}`);
         const data = await res.json();
         if (setTotalFavorit) setTotalFavorit(data.totalFavorit);
         setLocalTotalFavorit(data.totalFavorit);

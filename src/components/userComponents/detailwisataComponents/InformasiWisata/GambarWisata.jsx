@@ -11,7 +11,7 @@ const GambarWisata = () => {
   useEffect(() => {
     const fetchGambar = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/wisata/${id}`);
+        const res = await fetch(`/api/wisata/${id}`);
         const data = await res.json();
         setGambar(data.gambar);
         setJudul(data.judul);

@@ -30,7 +30,7 @@ const ButtonEditWisata = ({ fetchDetailDanLainnya }) => {
   // Ambil data wisata saat modal dibuka
   useEffect(() => {
     if (showEditModal && id) {
-      fetch(`http://localhost:3000/api/wisata/${id}`)
+      fetch(`/api/wisata/${id}`)
         .then(res => res.json())
         .then(data => setDataWisata(data))
         .catch(err => console.error("Gagal ambil data wisata:", err));
@@ -41,7 +41,7 @@ const ButtonEditWisata = ({ fetchDetailDanLainnya }) => {
   const handleEditSuccess = async () => {
     try {
       if (!id) return;
-      const res = await fetch(`http://localhost:3000/api/wisata/${id}`);
+      const res = await fetch(`/api/wisata/${id}`);
       const updatedData = await res.json();
       setDataWisata(updatedData);
       if (fetchDetailDanLainnya) await fetchDetailDanLainnya(); // update state DetailWisata

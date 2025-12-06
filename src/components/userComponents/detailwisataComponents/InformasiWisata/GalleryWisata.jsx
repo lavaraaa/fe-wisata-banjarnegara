@@ -15,7 +15,7 @@ const GalleryModal = ({ onUpdate }) => {
     const id = location.pathname.split('/').pop();
 
     try {
-      const resWisata = await axios.get(`http://localhost:3000/api/wisata/${id}`);
+      const resWisata = await axios.get(`/api/wisata/${id}`);
       setWisata(resWisata.data);
 
       const resUlasan = await axios.get(`/api/rating/${id}`);

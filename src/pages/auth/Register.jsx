@@ -20,7 +20,7 @@ const Register = ({ show, onClose, toLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/register', formData);
+      await axios.post('/api/register', formData);
       setMessage('Registrasi berhasil! Silakan login.');
       setFormData({ username: '', email: '', password: '' });
       setTimeout(() => {

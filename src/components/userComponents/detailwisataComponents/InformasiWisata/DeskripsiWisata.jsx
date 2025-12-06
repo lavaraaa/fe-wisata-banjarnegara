@@ -12,7 +12,7 @@ function DeskripsiWisata() {
   useEffect(() => {
     const fetchDeskripsi = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/wisata/${id}`);
+        const res = await axios.get(`/api/wisata/${id}`);
         setDeskripsi(res.data.deskripsi || 'Deskripsi tidak tersedia');
       } catch (err) {
         console.error('Gagal memuat deskripsi', err);

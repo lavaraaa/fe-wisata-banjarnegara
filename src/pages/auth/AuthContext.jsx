@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async (token) => {
     try {
-      const res = await axios.get('http://localhost:3000/api/me', {
+      const res = await axios.get('/api/me', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);

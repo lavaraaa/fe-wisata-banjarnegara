@@ -43,7 +43,7 @@ const LihatProfil = () => {
     const fetchWisataUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:3000/api/user-wisata-lain?id=${id}`,
+        const res = await axios.get(`/api/user-wisata-lain?id=${id}`,
            {
           headers: { Authorization: `Bearer ${token}` },
         });

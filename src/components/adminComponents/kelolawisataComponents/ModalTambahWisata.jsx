@@ -91,7 +91,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
     formData.append('galeri', file);
   });
     try {
-      await axios.post('http://localhost:3000/api/wisata', formData, {
+      await axios.post('/api/wisata', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

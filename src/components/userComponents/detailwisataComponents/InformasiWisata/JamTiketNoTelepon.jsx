@@ -9,7 +9,7 @@ const KeteranganWisata = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/wisata/${id}`);
+        const res = await axios.get(`/api/wisata/${id}`);
         setWisata(res.data);
       } catch (err) {
         console.error('Gagal mengambil data wisata:', err);

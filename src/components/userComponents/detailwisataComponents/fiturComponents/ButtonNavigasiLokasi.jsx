@@ -10,7 +10,7 @@ const ButtonNavigasiLokasi = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/wisata/${id}`);
+        const res = await axios.get(`/api/wisata/${id}`);
         setLinkGmaps(res.data.link_gmaps);
       } catch (err) {
         console.error('Gagal fetch data wisata:', err);

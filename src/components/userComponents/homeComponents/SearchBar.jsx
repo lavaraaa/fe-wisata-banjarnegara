@@ -10,7 +10,7 @@ const Home = () => {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/wisata');
+      const res = await fetch('/api/wisata');
       const data = await res.json();
 
       if (!Array.isArray(data)) {

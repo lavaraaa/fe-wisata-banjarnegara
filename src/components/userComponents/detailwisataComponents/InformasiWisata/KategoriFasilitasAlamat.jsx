@@ -9,7 +9,7 @@ const KolomDetailWisata = () => {
   useEffect(() => {
     const fetchDetailWisata = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/wisata/${id}`);
+        const res = await axios.get(`/api/wisata/${id}`);
         setWisata(res.data);
       } catch (error) {
         console.error('Gagal memuat detail wisata:', error);

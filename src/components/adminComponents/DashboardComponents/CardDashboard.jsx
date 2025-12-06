@@ -18,10 +18,10 @@ const CardDashboard = () => {
     try {
       const token = localStorage.getItem("token");
      const [userRes, wisataRes] = await Promise.all([
-  axios.get("http://localhost:3000/api/users", {
+  axios.get("/api/users", {
     headers: { Authorization: `Bearer ${token}` },
   }),
-  axios.get("http://localhost:3000/api/wisata"),
+  axios.get("/api/wisata"),
 ]);
 
 setJumlahUser(userRes.data.length);
@@ -40,19 +40,19 @@ setJumlahEvent(eventCount);
   const token = localStorage.getItem("token");
   try {
     const ulasanRes = await axios.get(
-      "http://localhost:3000/api/admin/rating",
+      "/api/admin/rating",
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setJumlahUlasan(Array.isArray(ulasanRes.data) ? ulasanRes.data.length : 0);
 
     const komentarRes = await axios.get(
-      "http://localhost:3000/api/admin/komentar",
+      "/api/admin/komentar",
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setJumlahKomentar(Array.isArray(komentarRes.data) ? komentarRes.data.length : 0);
 
     const laporankomentarRes = await axios.get(
-      "http://localhost:3000/api/admin/laporan-komentar",
+      "/api/admin/laporan-komentar",
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setJumlahLaporanKomentar(

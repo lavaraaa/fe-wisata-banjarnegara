@@ -20,7 +20,7 @@ import Loading from '../common/Loading';
     const fetchWisataLainnya = async () => {
       setLoading(true);
       try {
-       const url = `http://localhost:3000/api/rekomendasi/cbf/wisata/${wisataId}`;
+       const url = `/api/rekomendasi/cbf/wisata/${wisataId}`;
         const res = await axios.get(url);
         const data = Array.isArray(res.data) ? res.data : [];
         if (!data.length) setErrorMsg('Tidak ada wisata lainnya yang relevan.');

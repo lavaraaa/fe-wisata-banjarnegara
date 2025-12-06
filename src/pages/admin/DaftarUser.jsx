@@ -17,7 +17,7 @@ const DaftarUser = () => {
       const token = localStorage.getItem('token');
       if (!token) return console.log('Token tidak ditemukan');
 
-      const response = await axios.get('http://localhost:3000/api/users', {
+      const response = await axios.get('/api/users', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -46,7 +46,7 @@ const DaftarUser = () => {
       const token = localStorage.getItem('token');
       if (!token) return console.log('Token tidak ditemukan');
 
-      await axios.delete(`http://localhost:3000/api/users/${selectedUserId}`, {
+      await axios.delete(`/api/users/${selectedUserId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

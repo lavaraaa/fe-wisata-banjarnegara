@@ -10,7 +10,7 @@ const JudulWisata = () => {
   useEffect(() => {
     const fetchJudul = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/wisata/${id}`);
+        const res = await fetch(`/api/wisata/${id}`);
         const data = await res.json();
         setJudul(data.judul);
       } catch (error) {

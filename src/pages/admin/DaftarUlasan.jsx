@@ -19,7 +19,7 @@ const DaftarUlasan = () => {
 
   const fetchUlasan = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/admin/rating', {
+      const res = await axios.get('/api/admin/rating', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUlasan(res.data);

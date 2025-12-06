@@ -43,7 +43,7 @@ if (location.hash) {
 
 const fetchDetailDanLainnya = async () => {
   try {
-    const resDetail = await fetch(`http://localhost:3000/api/wisata/${id}`);
+    const resDetail = await fetch(`/api/wisata/${id}`);
     const dataDetail = await resDetail.json();
     setWisata(dataDetail);
 
