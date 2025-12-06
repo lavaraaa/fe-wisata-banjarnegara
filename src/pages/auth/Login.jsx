@@ -22,7 +22,7 @@ const handleChange = (e) => {
     setLoading(true);
     setMessage('');
     try {
-    const res = await axios.post('http://localhost:3000/api/login', formData);
+    const res = await axios.post('/api/login', formData);
     setMessage('Login berhasil!');
     setTimeout(async () => {
     await login(res.data.token); 
