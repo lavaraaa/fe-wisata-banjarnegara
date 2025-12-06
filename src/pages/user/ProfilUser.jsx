@@ -21,7 +21,7 @@ const ProfilUser = () => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:3000/api/me', {
+        const res = await axios.get('/api/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
@@ -37,7 +37,7 @@ const ProfilUser = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     axios
-      .get('http://localhost:3000/api/user-wisata', {
+      .get('/api/user-wisata', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -58,7 +58,7 @@ const ProfilUser = () => {
 
   try {
     const token = localStorage.getItem('token');
-    const res = await axios.post('http://localhost:3000/api/update-photo', formData, {
+    const res = await axios.post('/api/update-photo', formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
