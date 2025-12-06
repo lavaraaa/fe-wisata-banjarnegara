@@ -9,7 +9,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { BrowserRouter } from "react-router-dom";
 import { NotifikasiProvider } from '../src/components/common/Notifikasi';
 import { AuthProvider } from './pages/auth/AuthContext';
-import logoputih from './assets/logo.png';
+import logoputih from './assets/logoputih.png';
 
 const link = document.createElement("link");
 link.rel = "icon";
