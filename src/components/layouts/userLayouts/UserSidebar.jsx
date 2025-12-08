@@ -102,6 +102,7 @@ const UserSidebar = () => {
                 objectFit: 'cover',
                 flexShrink: 0  }} 
               />
+              <span className="text-white fw-bold">{user.username}</span>
               <div className="d-flex flex-column" 
               // style={{marginLeft:20}}
               >
