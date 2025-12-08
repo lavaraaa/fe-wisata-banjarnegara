@@ -182,18 +182,29 @@ const handleDeletePhoto = async () => {
         }}
       ></div>
 
-     {/* TAB BUTTON */}
-<div className="d-flex justify-content-center" >
+  {/* TAB BUTTON */}
+<div
+  className="d-flex"
+  style={{
+    overflowX: "auto",
+    whiteSpace: "nowrap",
+    gap: "1rem",
+    paddingBottom: "4px",
+  }}
+>
   <button
     onClick={() => setActiveTab('disukai')}
-    className={`w-44 border-bottom-2 py-3 ${activeTab === 'disukai' ? 'border-accent-1' : ''}`}
     style={{
-      border: 'none',
-      borderBottom: activeTab === 'disukai' ? '2px solid #0d6efd' : '2px solid transparent',
-      background: 'transparent',
-      padding: '0.75rem 1rem',
-      cursor: 'pointer',
-      fontWeight: activeTab === 'disukai' ? '600' : '400',
+      display: "inline-block",
+      minWidth: "140px",
+      border: "none",
+      borderBottom: activeTab === 'disukai'
+        ? '2px solid #0d6efd'
+        : '2px solid transparent',
+      background: "transparent",
+      padding: "0.75rem 1rem",
+      cursor: "pointer",
+      fontWeight: activeTab === 'disukai' ? "600" : "400",
     }}
   >
     Wisata Disukai
@@ -201,20 +212,23 @@ const handleDeletePhoto = async () => {
 
   <button
     onClick={() => setActiveTab('disimpan')}
-    className={`w-44 border-bottom-2 py-3 ${activeTab === 'disimpan' ? 'border-accent-1' : ''}`}
     style={{
-    
-      border: 'none',
-      borderBottom: activeTab === 'disimpan' ? '2px solid #0d6efd' : '2px solid transparent',
-      background: 'transparent',
-      padding: '0.75rem 1rem',
-      cursor: 'pointer',
-      fontWeight: activeTab === 'disimpan' ? '600' : '400',
+      display: "inline-block",
+      minWidth: "140px",
+      border: "none",
+      borderBottom: activeTab === 'disimpan'
+        ? '2px solid #0d6efd'
+        : '2px solid transparent',
+      background: "transparent",
+      padding: "0.75rem 1rem",
+      cursor: "pointer",
+      fontWeight: activeTab === 'disimpan' ? "600" : "400",
     }}
   >
     Wisata Disimpan
   </button>
 </div>
+
 
 
       {/* LIST WISATA */}
