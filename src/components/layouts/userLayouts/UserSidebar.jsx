@@ -87,7 +87,11 @@ const UserSidebar = () => {
           </div>
 
           {user && (
-            <div className="mt-3 d-flex flex-column align-items-start w-100" style={{ cursor: 'pointer',marginLeft:5 }} onClick={() => handleNavigate('/profiluser')}>
+            <div className="mt-3 d-flex flex-column align-items-start w-100" 
+            style={{ 
+              cursor: 'pointer',
+              marginLeft:5 }}
+              onClick={() => handleNavigate('/profiluser')}>
               <img 
               src={user.photoURL?.trim() ? user.photoURL : profilePlaceholder} 
               alt="Profile" className="rounded-circle me-2" width="50" height="50"
