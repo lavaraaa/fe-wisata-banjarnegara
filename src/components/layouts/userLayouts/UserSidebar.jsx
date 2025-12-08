@@ -87,7 +87,7 @@ const UserSidebar = () => {
           </div>
 
           {user && (
-            <div className="mt-3 d-flex flex-column align-items-start w-100" 
+            <div className="mt-2 d-flex flex-column align-items-start w-100" 
             style={{ 
               cursor: 'pointer',
               marginLeft:5 }}
@@ -102,9 +102,8 @@ const UserSidebar = () => {
                 objectFit: 'cover',
                 flexShrink: 0  }} 
               />
-              <div className="d-flex flex-column" style={{marginLeft:12}}>
+              <div className="d-flex flex-column" style={{marginLeft:20}}>
                 <span className="text-white fw-bold">{user.username}</span>
-                <span className="text-white fw-bold">{user.email}</span>
               </div>
             </div>
           )}
