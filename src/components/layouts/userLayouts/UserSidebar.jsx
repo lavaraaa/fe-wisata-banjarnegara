@@ -104,6 +104,7 @@ const UserSidebar = () => {
               />
               <div className="d-flex flex-column" style={{marginLeft:12}}>
                 <span className="text-white fw-bold">{user.username}</span>
+                <span className="text-white fw-bold">{user.email}</span>
               </div>
             </div>
           )}
