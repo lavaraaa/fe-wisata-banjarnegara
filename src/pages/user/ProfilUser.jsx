@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useSwipeable } from "react-swipeable";
+
 import axios from 'axios';
 import profilePlaceholder from '../../assets/profil.png';
 import CardWisata from '../../components/common/cardComponents/CardWisata';
@@ -16,6 +18,11 @@ const ProfilUser = () => {
   const [showPreview, setShowPreview] = useState(false);
   const { showNotif } = useNotifikasi();
   const [loading, setLoading] = useState(true);
+
+  const handlers = useSwipeable({
+  onSwipedLeft: () => setActiveTab("disimpan"),
+  onSwipedRight: () => setActiveTab("disukai"),
+});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -182,29 +189,18 @@ const handleDeletePhoto = async () => {
         }}
       ></div>
 
-  {/* TAB BUTTON */}
-<div
-  className="d-flex"
-  style={{
-    overflowX: "auto",
-    whiteSpace: "nowrap",
-    gap: "1rem",
-    paddingBottom: "4px",
-  }}
->
+     {/* TAB BUTTON */}
+<div className="d-flex justify-content-center" >
   <button
     onClick={() => setActiveTab('disukai')}
+    className={`w-44 border-bottom-2 py-3 ${activeTab === 'disukai' ? 'border-accent-1' : ''}`}
     style={{
-      display: "inline-block",
-      minWidth: "140px",
-      border: "none",
-      borderBottom: activeTab === 'disukai'
-        ? '2px solid #0d6efd'
-        : '2px solid transparent',
-      background: "transparent",
-      padding: "0.75rem 1rem",
-      cursor: "pointer",
-      fontWeight: activeTab === 'disukai' ? "600" : "400",
+      border: 'none',
+      borderBottom: activeTab === 'disukai' ? '2px solid #0d6efd' : '2px solid transparent',
+      background: 'transparent',
+      padding: '0.75rem 1rem',
+      cursor: 'pointer',
+      fontWeight: activeTab === 'disukai' ? '600' : '400',
     }}
   >
     Wisata Disukai
@@ -212,17 +208,15 @@ const handleDeletePhoto = async () => {
 
   <button
     onClick={() => setActiveTab('disimpan')}
+    className={`w-44 border-bottom-2 py-3 ${activeTab === 'disimpan' ? 'border-accent-1' : ''}`}
     style={{
-      display: "inline-block",
-      minWidth: "140px",
-      border: "none",
-      borderBottom: activeTab === 'disimpan'
-        ? '2px solid #0d6efd'
-        : '2px solid transparent',
-      background: "transparent",
-      padding: "0.75rem 1rem",
-      cursor: "pointer",
-      fontWeight: activeTab === 'disimpan' ? "600" : "400",
+    
+      border: 'none',
+      borderBottom: activeTab === 'disimpan' ? '2px solid #0d6efd' : '2px solid transparent',
+      background: 'transparent',
+      padding: '0.75rem 1rem',
+      cursor: 'pointer',
+      fontWeight: activeTab === 'disimpan' ? '600' : '400',
     }}
   >
     Wisata Disimpan
@@ -230,23 +224,24 @@ const handleDeletePhoto = async () => {
 </div>
 
 
-
-      {/* LIST WISATA */}
-      <div className="row d-flex flex-wrap justify-content-start mt-4">
-        {(activeTab === 'disukai' ? disukai : disimpan).length > 0 ? (
-          (activeTab === 'disukai' ? disukai : disimpan).map((item) => (
-            <CardWisata key={item.id} item={item} showOptionsMenu={false} />
-          ))
-        ) : (
-          <p
-            className="mb-5 mt-3 d-flex flex-column align-items-center text-muted"
-            style={{ minHeight: '203px' }}
-          >
-            <Icon icon="hugeicons:album-not-found-01" width={60} />
-            Belum ada wisata yang {activeTab === 'disukai' ? 'disukai' : 'disimpan'}.
-          </p>
-        )}
-      </div>
+   {/* LIST WISATA (BUNGKUS DENGAN SWIPE) */}
+<div {...handlers}>
+  <div className="row d-flex flex-wrap justify-content-start mt-4">
+    {(activeTab === 'disukai' ? disukai : disimpan).length > 0 ? (
+      (activeTab === 'disukai' ? disukai : disimpan).map((item) => (
+        <CardWisata key={item.id} item={item} showOptionsMenu={false} />
+      ))
+    ) : (
+      <p
+        className="mb-5 mt-3 d-flex flex-column align-items-center text-muted"
+        style={{ minHeight: '203px' }}
+      >
+        <Icon icon="hugeicons:album-not-found-01" width={60} />
+        Belum ada wisata yang {activeTab === 'disukai' ? 'disukai' : 'disimpan'}.
+      </p>
+    )}
+  </div>
+</div>
 
       {/* MODAL PREVIEW */}
       {showPreview && (
