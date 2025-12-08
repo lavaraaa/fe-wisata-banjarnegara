@@ -237,7 +237,7 @@ const handleDeletePhoto = async () => {
         style={{ minHeight: '203px' }}
       >
         <Icon icon="hugeicons:album-not-found-01" width={60} />
-        Belum ada wisata yang {activeTab === 'disukai' ? 'disukai' : 'disimpan'}.
+        Belum ada wisata yang {activeTab === 'disukai' ? 'disukai' : 'disimpan'}
       </p>
     )}
   </div>
