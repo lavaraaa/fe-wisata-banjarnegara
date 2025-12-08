@@ -96,8 +96,8 @@ const UserSidebar = () => {
               src={user.photoURL?.trim() ? user.photoURL : profilePlaceholder} 
               alt="Profile" className="rounded-circle me-2" width="50" height="50"
                style={{  
-                width: '40px',
-                height: '40px',
+                width: '50px',
+                height: '50px',
                 borderRadius: '50%',
                 objectFit: 'cover',
                 flexShrink: 0  }} 
