@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from "react-dom/client";
 import App from './App.jsx';
+import axios from 'axios';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./main.css";
@@ -10,6 +11,9 @@ import { BrowserRouter } from "react-router-dom";
 import { NotifikasiProvider } from '../src/components/common/Notifikasi';
 import { AuthProvider } from './pages/auth/AuthContext';
 import logoputih from './assets/logoputih.png';
+
+// Configure axios base URL
+axios.defaults.baseURL = 'https://be-wisata-banjarnegara.vercel.app/';
 
 const link = document.createElement("link");
 link.rel = "icon";

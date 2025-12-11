@@ -3,20 +3,20 @@ import { AuthContext } from '../../pages/auth/AuthContext';
 import AnimasiAwal from './AnimasiAwal';
 import axios from 'axios';
 
-const Chatbot = ({ buttonRight }) => {
-const { user } = useContext(AuthContext);
-const [messages, setMessages] = useState([]);
-const [started, setStarted] = useState(false);
-const [input, setInput] = useState('');
+const PopupChatbot = () => {
+  const { user } = useContext(AuthContext);
+  const [messages, setMessages] = useState([]);
+  const [started, setStarted] = useState(false);
+  const [input, setInput] = useState('');
 
-const handleSend = async () => {
-  if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim()) return;
     setMessages([...messages, { text: input.trim(), user: true }]);
     setStarted(true);    
     const userMessage = input.trim();
     setInput('');
     try {
-      const res = await axios.post('http://localhost:3000/chat/query', {
+      const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, {
         query: userMessage
       });
       const botResponse = res.data.data.response;
@@ -29,23 +29,9 @@ const handleSend = async () => {
       ]);
     }
   };
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: '105px',
-        right: buttonRight,
-        width: '320px',
-        height: '500px',
-        backgroundColor: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-        display: 'flex',
-        flexDirection: 'column',
-        zIndex: 1299,
-        overflow: 'hidden',
-      }}
-    >
+    <>
       <div
         style={{
           flex: 1,
@@ -111,8 +97,8 @@ const handleSend = async () => {
           <i className="bi bi-send-fill"></i>
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default Chatbot;
+export default PopupChatbot;
