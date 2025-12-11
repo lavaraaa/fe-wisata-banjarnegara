@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import ModalEditWisata from '../../adminComponents/kelolawisataComponents/ModalEditWisata';
 import { AuthContext } from '../../../pages/auth/AuthContext';
+import { useNotifikasi } from '../../common/Notifikasi';
 
 const WisataLainnya = ({ item, onActionSuccess }) => {
   const { user } = useContext(AuthContext);
@@ -11,7 +12,7 @@ const WisataLainnya = ({ item, onActionSuccess }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-
+  const { showNotif } = useNotifikasi();
 
   const toggleOptions = () => {
     setShowOptions((prev) => !prev);
@@ -19,7 +20,7 @@ const WisataLainnya = ({ item, onActionSuccess }) => {
 
   const handleDelete = async () => {
     try {
-      await fetch(`http://localhost:3000/api/wisata/${item.id}`, {
+      await fetch(`/api/wisata/${item.id}`, {
         method: 'DELETE',
       });
       
@@ -28,7 +29,7 @@ const WisataLainnya = ({ item, onActionSuccess }) => {
       if (onActionSuccess) onActionSuccess(); // panggil ulang data kalau ada
     } catch (err) {
       console.error('Gagal menghapus:', err);
-      alert('Gagal menghapus.');
+      showNotif('Destinasi Gagal Dihapus.');
     }
   };
 
