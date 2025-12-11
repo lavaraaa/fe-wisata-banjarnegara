@@ -91,12 +91,37 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
     formData.append('galeri', file);
   });
     try {
-      await axios.post('/api/wisata', formData, {
+      const response = await axios.post('/api/wisata', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
      });
   showNotif('Wisata berhasil ditambahkan!', 'success');
+  
+  // Sync to vector database for chatbot search (non-blocking)
+  try {
+    const wisataId = response.data.id || response.data._id;
+    const documentText = `${judul}. ${deskripsi}. Kategori: ${kategoriTerpilih.join(', ')}. Fasilitas: ${fasilitas.join(', ')}.`;
+    
+    await axios.post(`${import.meta.env.VITE_VECTOR_DB_URL}/tourism/documents`, {
+      ids: [wisataId.toString()],
+      documents: [documentText],
+      metadatas: [{
+        kode_wilayah: kodewilayah,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        judul: judul,
+        alamat: alamat,
+        harga_tiket: hargaTiket,
+        kategori: kategoriTerpilih.join(', '),
+        fasilitas: fasilitas.join(', ')
+      }]
+    });
+  } catch (vectorError) {
+    console.error('Vector DB indexing failed (non-critical):', vectorError);
+    // Don't show error to user - this is a background operation
+  }
+  
   if (onActionSuccess) onActionSuccess();
   handleClose();
 } catch (error) {
