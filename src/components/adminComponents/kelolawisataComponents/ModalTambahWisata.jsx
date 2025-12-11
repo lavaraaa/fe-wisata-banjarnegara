@@ -100,23 +100,30 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
   
   // Sync to vector database for chatbot search (non-blocking)
   try {
-    const wisataId = response.data.id || response.data._id;
-    const documentText = `${judul}. ${deskripsi}. Kategori: ${kategoriTerpilih.join(', ')}. Fasilitas: ${fasilitas.join(', ')}.`;
+    // Extract wisata ID from response
+    const wisataId = response.data?.id || response.data?._id || response.data?.data?.id || response.data?.data?._id;
     
-    await axios.post(`${import.meta.env.VITE_VECTOR_DB_URL}/tourism/documents`, {
-      ids: [wisataId.toString()],
-      documents: [documentText],
-      metadatas: [{
-        kode_wilayah: kodewilayah,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
-        judul: judul,
-        alamat: alamat,
-        harga_tiket: hargaTiket,
-        kategori: kategoriTerpilih.join(', '),
-        fasilitas: fasilitas.join(', ')
-      }]
-    });
+    if (!wisataId) {
+      console.warn('No wisata ID found in response, skipping vector DB sync. Response:', response.data);
+    } else {
+      const documentText = `${judul}. ${deskripsi}. Kategori: ${kategoriTerpilih.join(', ')}. Fasilitas: ${fasilitas.join(', ')}.`;
+      
+      await axios.post(`${import.meta.env.VITE_VECTOR_DB_URL}/tourism/documents`, {
+        ids: [wisataId.toString()],
+        documents: [documentText],
+        metadatas: [{
+          kode_wilayah: kodewilayah,
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+          judul: judul,
+          alamat: alamat,
+          harga_tiket: hargaTiket,
+          kategori: kategoriTerpilih.join(', '),
+          fasilitas: fasilitas.join(', ')
+        }]
+      });
+      console.log('Vector DB sync successful for wisata ID:', wisataId);
+    }
   } catch (vectorError) {
     console.error('Vector DB indexing failed (non-critical):', vectorError);
     // Don't show error to user - this is a background operation
