@@ -100,33 +100,34 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
   
   // Sync to vector database for chatbot search (non-blocking)
   try {
-    // Extract wisata ID from response
-    const wisataId = response.data?.id || response.data?._id || response.data?.data?.id || response.data?.data?._id;
-    
-    if (!wisataId) {
-      console.warn('No wisata ID found in response, skipping vector DB sync. Response:', response.data);
+    // Backend tidak return ID, jadi fetch wisata list dan cari berdasarkan judul
+    const wisataListRes = await axios.get('/api/wisata');
+    const newWisata = wisataListRes.data.find(w => w.judul === judul);
+
+    if (!newWisata || !newWisata.id) {
+      console.warn('Could not find newly added wisata in database, skipping vector DB sync');
     } else {
-      const documentText = `${judul}. ${deskripsi}. Kategori: ${kategoriTerpilih.join(', ')}. Fasilitas: ${fasilitas.join(', ')}.`;
-      
+      const wisataId = newWisata.id;
+
+      // Format document text sesuai contoh yang berhasil
+      const documentText = `${judul} Banjarnegara. ${deskripsi}. Lokasi: ${alamat}. Jam buka ${waktuBuka}-${waktuTutup}. Harga tiket Rp${hargaTiket}. Fasilitas: ${fasilitas.join(', ')}.`;
+
       await axios.post(`${import.meta.env.VITE_VECTOR_DB_URL}/tourism/documents`, {
         ids: [wisataId.toString()],
         documents: [documentText],
         metadatas: [{
+          wisata_id: wisataId,
+          nama: judul,
+          kategori: kategoriTerpilih.join(', '),
           kode_wilayah: kodewilayah,
           latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude),
-          judul: judul,
-          alamat: alamat,
-          harga_tiket: hargaTiket,
-          kategori: kategoriTerpilih.join(', '),
-          fasilitas: fasilitas.join(', ')
+          longitude: parseFloat(longitude)
         }]
       });
       console.log('Vector DB sync successful for wisata ID:', wisataId);
     }
   } catch (vectorError) {
     console.error('Vector DB indexing failed (non-critical):', vectorError);
-    // Don't show error to user - this is a background operation
   }
   
   if (onActionSuccess) onActionSuccess();
