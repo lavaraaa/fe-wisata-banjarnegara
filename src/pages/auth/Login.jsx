@@ -49,7 +49,6 @@ const handleChange = (e) => {
       <div className="mb-1">
         <label className="form-label">Email atau Username</label>
           <input 
-          autoFocus
           name="identifier" 
           type="text" 
           className="form-control"
