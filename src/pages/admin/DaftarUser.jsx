@@ -17,13 +17,9 @@ const DaftarUser = () => {
       const token = localStorage.getItem('token');
       if (!token) return console.log('Token tidak ditemukan');
 
-     const response = await axios.get(
-  `${import.meta.env.VITE_BASE_URL}/users`,
-  {
-    headers: { Authorization: `Bearer ${token}` },
-  }
-);
-
+      const response = await axios.get('/api/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsers(response.data);
     } catch (error) {
       console.error('Error detail:', error);
