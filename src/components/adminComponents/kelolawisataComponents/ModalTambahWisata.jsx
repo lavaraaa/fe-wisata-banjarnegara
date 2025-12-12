@@ -82,60 +82,28 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
     formData.append('harga_tiket', hargaTiket);
     formData.append('link_gmaps', linkGmaps);
 
-     formData.append('longitude', longitude);
-     formData.append('latitude', latitude);
-     formData.append('kode_wilayah', kodewilayah);
+    formData.append('longitude', longitude);
+    formData.append('latitude', latitude);
+    formData.append('kode_wilayah', kodewilayah);
 
     formData.append('kategori', JSON.stringify(kategoriTerpilih));
-  galeriFiles.forEach((file) => {
-    formData.append('galeri', file);
-  });
+    galeriFiles.forEach((file) => {
+      formData.append('galeri', file);
+    });
     try {
       const response = await axios.post('/api/wisata', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-     });
-  showNotif('Wisata berhasil ditambahkan!', 'success');
-  
-  // Sync to vector database for chatbot search (non-blocking)
-  try {
-    // Backend tidak return ID, jadi fetch wisata list dan cari berdasarkan judul
-    const wisataListRes = await axios.get('/api/wisata');
-    const newWisata = wisataListRes.data.find(w => w.judul === judul);
-
-    if (!newWisata || !newWisata.id) {
-      console.warn('Could not find newly added wisata in database, skipping vector DB sync');
-    } else {
-      const wisataId = newWisata.id;
-
-      // Format document text sesuai contoh yang berhasil
-      const documentText = `${judul} Banjarnegara. ${deskripsi}. Lokasi: ${alamat}. Jam buka ${waktuBuka}-${waktuTutup}. Harga tiket Rp${hargaTiket}. Fasilitas: ${fasilitas.join(', ')}.`;
-
-      await axios.post(`${import.meta.env.VITE_VECTOR_DB_URL}/tourism/documents`, {
-        ids: [wisataId.toString()],
-        documents: [documentText],
-        metadatas: [{
-          wisata_id: wisataId,
-          nama: judul,
-          kategori: kategoriTerpilih.join(', '),
-          kode_wilayah: kodewilayah,
-          latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude)
-        }]
       });
-      console.log('Vector DB sync successful for wisata ID:', wisataId);
+      showNotif('Wisata berhasil ditambahkan!', 'success');
+
+      if (onActionSuccess) onActionSuccess();
+      handleClose();
+    } catch (error) {
+      console.error('Error adding wisata: ', error);
+      showNotif('Gagal menambahkan wisata.', 'error');
     }
-  } catch (vectorError) {
-    console.error('Vector DB indexing failed (non-critical):', vectorError);
-  }
-  
-  if (onActionSuccess) onActionSuccess();
-  handleClose();
-} catch (error) {
-  console.error('Error adding wisata: ', error);
-  showNotif('Gagal menambahkan wisata.', 'error');
-}
   };
 
   return (
@@ -162,7 +130,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
         }}
       >
         <div className="modal-content">
-          <div className="modal-header" style={{ borderBottom: '1px solid #ddd', backgroundColor: '#015E78', padding:10 }}>
+          <div className="modal-header" style={{ borderBottom: '1px solid #ddd', backgroundColor: '#015E78', padding: 10 }}>
             <h5 className="modal-title" style={{ fontWeight: '600', fontSize: '18px', color: '#fff', flexGrow: 1, textAlign: 'center' }}>
               Tambah Destinasi Wisata
             </h5>
@@ -175,7 +143,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                 color: 'white',
                 fontSize: '20px',
                 cursor: 'pointer',
-                fontWeight:'800'
+                fontWeight: '800'
               }}
             >
               &#10005;
@@ -265,56 +233,56 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                   }}
                 />
               </div>
-{/* Input Galeri */}
-<div className="mb-2">
-  <label htmlFor="galeri" className="form-label">Galeri (Maksimal 10 Gambar)</label>
-  <input
-    type="file"
-    id="galeri"
-    name="galeri"
-    className="form-control"
-    multiple
-    accept="image/*"
-    onChange={(e) => {
-      const selected = Array.from(e.target.files);
-      setGaleriFiles((prev) => [...prev, ...selected]);
-      e.target.value = '';
-    }}
-    style={{
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    padding: '5px 10px',
-    fontSize: '16px',
-    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-    }}
-  />
-</div>
+              {/* Input Galeri */}
+              <div className="mb-2">
+                <label htmlFor="galeri" className="form-label">Galeri (Maksimal 10 Gambar)</label>
+                <input
+                  type="file"
+                  id="galeri"
+                  name="galeri"
+                  className="form-control"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => {
+                    const selected = Array.from(e.target.files);
+                    setGaleriFiles((prev) => [...prev, ...selected]);
+                    e.target.value = '';
+                  }}
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    padding: '5px 10px',
+                    fontSize: '16px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </div>
 
-{/* List file galeri yang dipilih */}
-{galeriFiles.length > 0 && (
-  <ul className="list-group mb-3">
-    {galeriFiles.map((file, index) => (
-      <li
-        key={index}
-        className="list-group-item d-flex justify-content-between align-items-center"
-      >
-        {file.name}
-        <button
-          type="button"
-          className="btn btn-sm btn-outline-danger"
-          onClick={() =>
-            setGaleriFiles((prev) => prev.filter((_, i) => i !== index))
-          }
-        >
-          ❌
-        </button>
-      </li>
-    ))}
-  </ul>
-)}
+              {/* List file galeri yang dipilih */}
+              {galeriFiles.length > 0 && (
+                <ul className="list-group mb-3">
+                  {galeriFiles.map((file, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      {file.name}
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() =>
+                          setGaleriFiles((prev) => prev.filter((_, i) => i !== index))
+                        }
+                      >
+                        ❌
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-            {/* Alamat wisata lengkap */}
-            <div className="mb-2">
+              {/* Alamat wisata lengkap */}
+              <div className="mb-2">
                 <label htmlFor="alamat" className="form-label">Alamat wisata lengkap</label>
                 <input
                   type="text"
@@ -397,103 +365,103 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                 />
               </div>
 
-   <div className="mb-1">
-      <label htmlFor="fasilitas" className="form-label">Fasilitas</label>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <input
-          type="text"
-          className="form-control"
-          id="fasilitas"
-          value={fasilitasInput}
-          onChange={(e) => setFasilitasInput(e.target.value)}
-          placeholder="Masukkan fasilitas yang tersedia"
-          style={{
-            borderRadius: '8px',
-            border: '1px solid #ddd',
-            padding: '5px 10px',
-            fontSize: '16px',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-            flexGrow: 1,
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && fasilitasInput.trim()) {
-              e.preventDefault();
-              if (!fasilitas.includes(fasilitasInput.trim())) {
-                setFasilitas([...fasilitas, fasilitasInput.trim()]);
-              }
-              setFasilitasInput('');
-            }
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => {
-            if (fasilitasInput.trim() && !fasilitas.includes(fasilitasInput.trim())) {
-              setFasilitas([...fasilitas, fasilitasInput.trim()]);
-              setFasilitasInput('');
-            }
-          }}
-          style={{
-            backgroundColor: '#015E78',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '8px 10px',
-            fontSize: '14px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-            transition: 'background-color 0.3s ease',
-            alignSelf: 'center',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#01455B')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#015E78')}
-        >
-          Tambah
-        </button>
-      </div>
+              <div className="mb-1">
+                <label htmlFor="fasilitas" className="form-label">Fasilitas</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="fasilitas"
+                    value={fasilitasInput}
+                    onChange={(e) => setFasilitasInput(e.target.value)}
+                    placeholder="Masukkan fasilitas yang tersedia"
+                    style={{
+                      borderRadius: '8px',
+                      border: '1px solid #ddd',
+                      padding: '5px 10px',
+                      fontSize: '16px',
+                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                      flexGrow: 1,
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && fasilitasInput.trim()) {
+                        e.preventDefault();
+                        if (!fasilitas.includes(fasilitasInput.trim())) {
+                          setFasilitas([...fasilitas, fasilitasInput.trim()]);
+                        }
+                        setFasilitasInput('');
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (fasilitasInput.trim() && !fasilitas.includes(fasilitasInput.trim())) {
+                        setFasilitas([...fasilitas, fasilitasInput.trim()]);
+                        setFasilitasInput('');
+                      }
+                    }}
+                    style={{
+                      backgroundColor: '#015E78',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '8px 10px',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                      transition: 'background-color 0.3s ease',
+                      alignSelf: 'center',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#01455B')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#015E78')}
+                  >
+                    Tambah
+                  </button>
+                </div>
 
-      <div
-        style={{
-          marginTop: '10px',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '10px',
-        }}
-      >
-        {fasilitas.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              backgroundColor: '#e0f7fa',
-              padding: '6px 10px',
-              borderRadius: '20px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <span style={{ marginRight: '8px' }}>{item}</span>
-            <button
-              type="button"
-              onClick={() =>
-                setFasilitas(fasilitas.filter((_, i) => i !== index))
-              }
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: '#007b8a',
-                fontWeight: 'bold',
-                fontSize: '18px',
-                lineHeight: '1',
-              }}
-              aria-label={`Hapus fasilitas ${item}`}
-            >
-              &times;
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+                <div
+                  style={{
+                    marginTop: '10px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '10px',
+                  }}
+                >
+                  {fasilitas.map((item, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        backgroundColor: '#e0f7fa',
+                        padding: '6px 10px',
+                        borderRadius: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={{ marginRight: '8px' }}>{item}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFasilitas(fasilitas.filter((_, i) => i !== index))
+                        }
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#007b8a',
+                          fontWeight: 'bold',
+                          fontSize: '18px',
+                          lineHeight: '1',
+                        }}
+                        aria-label={`Hapus fasilitas ${item}`}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="mb-2">
                 <label htmlFor="harga_tiket" className="form-label">
@@ -539,9 +507,9 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
 
 
               {/* coba */}
-                 <div className="mb-2">
+              <div className="mb-2">
                 <label htmlFor="longitude" className="form-label">
-                 Longitude
+                  Longitude
                 </label>
                 <input
                   type="text"
@@ -559,7 +527,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                   }}
                 />
               </div>
-                 <div className="mb-2">
+              <div className="mb-2">
                 <label htmlFor="latitude" className="form-label">
                   Latitude
                 </label>
@@ -580,7 +548,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                 />
 
               </div>
-                 <div className="mb-2">
+              <div className="mb-2">
                 <label htmlFor="kode_wilayah" className="form-label">
                   Kode Wilayah
                 </label>
