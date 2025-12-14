@@ -506,7 +506,29 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
               </div>
 
 
-              {/* coba */}
+              {/* Latitude */}
+                 <div className="mb-2">
+                <label htmlFor="latitude" className="form-label">
+                  Latitude
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="latitude"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  required
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    padding: '5px 10px',
+                    fontSize: '16px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </div>
+
+              {/* Longitude */}
               <div className="mb-2">
                 <label htmlFor="longitude" className="form-label">
                   Longitude
@@ -527,27 +549,8 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                   }}
                 />
               </div>
-              <div className="mb-2">
-                <label htmlFor="latitude" className="form-label">
-                  Latitude
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="latitude"
-                  value={latitude}
-                  onChange={(e) => setLatitude(e.target.value)}
-                  required
-                  style={{
-                    borderRadius: '8px',
-                    border: '1px solid #ddd',
-                    padding: '5px 10px',
-                    fontSize: '16px',
-                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-                  }}
-                />
-
-              </div>
+           
+           {/* Kode Wilayah */}
               <div className="mb-2">
                 <label htmlFor="kode_wilayah" className="form-label">
                   Kode Wilayah
@@ -569,6 +572,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                 />
               </div>
             </div>
+            
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 type="button"
