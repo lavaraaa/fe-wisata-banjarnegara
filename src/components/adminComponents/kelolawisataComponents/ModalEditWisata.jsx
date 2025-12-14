@@ -15,6 +15,11 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
   const [fasilitas, setFasilitas] = useState([]);
   const [hargaTiket, setHargaTiket] = useState('');
   const [linkGmaps, setLinkGmaps] = useState('');
+
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [kodewilayah, setKodewilayah] = useState('');
+
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
   const [galeriFiles, setGaleriFiles] = useState([]);
   const [galeriLama, setGaleriLama] = useState([]);
@@ -46,6 +51,11 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
       setNomorTelepon(dataWisata.no_telepon || '');
       setHargaTiket(dataWisata.harga_tiket || '');
       setLinkGmaps(dataWisata.link_gmaps || '');
+
+      setLatitude(dataWisata.latitude || '');
+      setLongitude(dataWisata.longitude || '');
+      setKodewilayah(dataWisata.kodewilayah || '');
+
       setGambarLama(dataWisata.gambar || '');
       setEvent(dataWisata.event || '');
 
@@ -139,6 +149,11 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
     formData.append('fasilitas', JSON.stringify(fasilitas));
     formData.append('harga_tiket', hargaTiket);
     formData.append('link_gmaps', linkGmaps);
+
+    formData.append('latitude', latitude);
+    formData.append('longitude', longitude);
+    formData.append('kode_wilayah', kodewilayah);
+
     formData.append('kategori', JSON.stringify(kategoriTerpilih));
     formData.append('galeri_lama', JSON.stringify(galeriLama));
     galeriFiles.forEach((file) => formData.append('galeri', file));
@@ -614,6 +629,73 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                   }}
                 />
               </div>
+
+               {/* Latitude */}
+              <div className="mb-3">
+                <label htmlFor="latitude" className="form-label">
+                  Latitude
+                </label>
+                <input
+                  type="text"
+                  id="latitude"
+                  className="form-control"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  required
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    padding: '12px',
+                    fontSize: '16px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </div>
+
+               {/* Longitude */}
+              <div className="mb-3">
+                <label htmlFor="longitude" className="form-label">
+                  Longitude
+                </label>
+                <input
+                  type="text"
+                  id="longitude"
+                  className="form-control"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  required
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    padding: '12px',
+                    fontSize: '16px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </div>
+
+               {/* Link Google Maps */}
+              <div className="mb-3">
+                <label htmlFor="kode_wilayah" className="form-label">
+                  Kode Wilayah
+                </label>
+                <input
+                  type="text"
+                  id="kode_wilayah"
+                  className="form-control"
+                  value={kodewilayah}
+                  onChange={(e) => setKodewilayah(e.target.value)}
+                  required
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    padding: '12px',
+                    fontSize: '16px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </div>
+
             </div>
             <div
               className="modal-footer"
