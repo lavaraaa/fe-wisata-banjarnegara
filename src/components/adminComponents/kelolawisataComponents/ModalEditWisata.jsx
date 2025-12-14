@@ -54,7 +54,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
 
       setLatitude(dataWisata.latitude || '');
       setLongitude(dataWisata.longitude || '');
-      setKodewilayah(dataWisata.kodewilayah || '');
+      setKodewilayah(dataWisata.kode_wilayah || '');
 
       setGambarLama(dataWisata.gambar || '');
       setEvent(dataWisata.event || '');
