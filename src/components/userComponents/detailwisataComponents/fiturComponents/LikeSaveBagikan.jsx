@@ -105,7 +105,7 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
 
     const fetchTotalLike = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/total-like/${id}`);
+        const res = await fetch(`/api/total-like/${id}`);
         const data = await res.json();
         if (setTotalLike) setTotalLike(data.totalLikes);
         setLocalTotalLike(data.totalLikes);
