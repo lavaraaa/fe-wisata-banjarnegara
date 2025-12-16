@@ -90,7 +90,7 @@ useEffect(() => {
               </div> <LikeSaveBagikan/> </div>
 
             <p style={{ fontSize: 'clamp(13px, 2.5vw, 16px)', color: '#000', marginBottom: 0 }}>
-              Diunggah pada : {formatTanggalLengkap(wisata.created_at)}
+              Ditambahkan pada : {formatTanggalLengkap(wisata.created_at)}
             </p>
           </div>
           <EventWisata/>
