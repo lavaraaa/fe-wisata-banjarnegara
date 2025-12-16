@@ -162,11 +162,11 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
       await axios.put(`/api/wisata/${dataWisata.id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      showNotif('Wisata berhasil diedit!', 'success');
+      showNotif('Wisata berhasil diperbarui', 'success');
       handleClose();
       if (onEditSuccess) onEditSuccess();
     } catch (error) {
-      showNotif('Gagal mengedit wisata.', 'error');
+      showNotif('Wisata gagal diperbarui', 'error');
     }
   };
 
