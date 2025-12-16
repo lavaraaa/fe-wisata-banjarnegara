@@ -53,7 +53,11 @@ const KeteranganWisata = () => {
             Tiket
           </div>
           <div className="fw-semibold" style={{ fontSize: 'clamp(13px, 2vw, 15px)' }}>
-            Rp. {wisata.harga_tiket || 'N/A'}
+           {wisata.harga_tiket === 0
+           ? 'Gratis'
+            : wisata.harga_tiket
+            ? `Rp. ${wisata.harga_tiket}`
+            : 'N/A'}
           </div>
         </div>
 
