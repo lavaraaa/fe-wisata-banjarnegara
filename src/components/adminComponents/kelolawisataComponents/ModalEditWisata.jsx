@@ -441,7 +441,6 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                   className="form-control"
                   value={waktuBuka}
                   onChange={(e) => setWaktuBuka(e.target.value)}
-                  required
                   style={{
                     borderRadius: '8px',
                     border: '1px solid #ddd',
@@ -463,7 +462,6 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                   className="form-control"
                   value={waktuTutup}
                   onChange={(e) => setWaktuTutup(e.target.value)}
-                  required
                   style={{
                     borderRadius: '8px',
                     border: '1px solid #ddd',
