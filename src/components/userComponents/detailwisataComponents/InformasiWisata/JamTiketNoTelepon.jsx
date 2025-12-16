@@ -39,7 +39,9 @@ const KeteranganWisata = () => {
             Buka
           </div>
           <div className="fw-semibold" style={{ fontSize: 'clamp(13px, 2vw, 15px)' }}>
-            {wisata.jam_buka || 'N/A'} - {wisata.jam_tutup || 'N/A'}
+            {(!wisata.jam_buka && !wisata.jam_tutup) || (wisata.jam_buka?.startsWith('00:00') && wisata.jam_tutup?.startsWith('00:00'))
+            ? '24 Jam'
+            : `${wisata.jam_buka} - ${wisata.jam_tutup}`}
           </div>
         </div>
 
