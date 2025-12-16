@@ -24,14 +24,21 @@
 }
 
 body {
+   overflow-y: scroll;
   font-family: 'Outfit', sans-serif;
 }
-
+/* body.modal-open {
+  overflow: hidden;
+}
 
 html {
-   scrollbar-gutter: stable;
-   overflow-y: auto;
-} 
+  overflow-y: scroll;
+} */
+
+/* .lock-scroll {
+  overflow-y: hidden;  
+}
+ */
 
 :root {
     --primary-color: #f0f0f0;
