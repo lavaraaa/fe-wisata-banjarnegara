@@ -108,9 +108,11 @@ const handleDeletePhoto = async () => {
   }
 };
 
- if (loading) return <Loading />;
+if (loading) return <Loading />;
+if (!user) return null;
 
-  const isDefaultPhoto = !user?.photoURL;
+const isDefaultPhoto = !user.photoURL;
+
 
   return (
     <main
@@ -127,7 +129,7 @@ const handleDeletePhoto = async () => {
         style={{ width: '100px', height: '100px' }}
       >
        <img
-  src={user?.photoURL ? `${user.photoURL}?t=${Date.now()}` : profilePlaceholder}
+  src={user.photoURL ? `${user.photoURL}?t=${Date.now()}` : profilePlaceholder}
   alt="Foto Profil"
   className="rounded-circle"
   style={{
@@ -180,8 +182,8 @@ const handleDeletePhoto = async () => {
         )}
       </div>
 
-      <h5 className="mt-2">{user?.username}</h5>
-      <p className="mt-1">{user?.email}</p>
+      <h5 className="mt-2">{user.username}</h5>
+      <p className="mt-1">{user.email}</p>
       <div
         className="text-muted"
         style={{
