@@ -46,6 +46,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const dropdownRef = useRef(null);
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
+  const [readyToFilter, setReadyToFilter] = useState(false);
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -72,37 +73,42 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   };
 
   // --- sync from URL (only set drafts when URL changes, avoid loop with skipURLSyncRef) ---
-  useEffect(() => {
-    if (skipURLSyncRef.current) {
-      // reset flag and skip
-      skipURLSyncRef.current = false;
-      return;
-    }
+ useEffect(() => {
+  if (allWisata.length > 0) {
+    setReadyToFilter(true);
+  }
+}, [allWisata]);
 
-    if (searchQuery && searchQuery !== searchTerm) {
-      setSearchInput(searchQuery);
-      setSearchTerm(searchQuery);
-    }
+useEffect(() => {
+  if (!readyToFilter) return; // tunggu data siap
 
-    if (kategoriDariURL) {
-      const kategoriArr = kategoriDariURL.includes(',')
-        ? kategoriDariURL.split(',').map(k => k.trim())
-        : [kategoriDariURL];
-      if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
-        setDraftKategori(kategoriArr);
-        setKategoriTerpilih(kategoriArr); // langsung set final too so UI matches URL
-      }
-    }
+  if (skipURLSyncRef.current) {
+    skipURLSyncRef.current = false;
+    return;
+  }
 
-    if (sortDariURL) {
-      if (draftSort !== sortDariURL) {
-        setDraftSort(sortDariURL);
-        setSortTerpilih(sortDariURL);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, kategoriDariURL, sortDariURL]);
+  if (searchQuery && searchQuery !== searchTerm) {
+    setSearchInput(searchQuery);
+    setSearchTerm(searchQuery);
+  }
 
+  if (kategoriDariURL) {
+    const kategoriArr = kategoriDariURL.includes(',')
+      ? kategoriDariURL.split(',').map(k => k.trim())
+      : [kategoriDariURL];
+    if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
+      setDraftKategori(kategoriArr);
+      setKategoriTerpilih(kategoriArr); // nama lama tetap
+    }
+  }
+
+  if (sortDariURL) {
+    if (draftSort !== sortDariURL) {
+      setDraftSort(sortDariURL);
+      setSortTerpilih(sortDariURL);
+    }
+  }
+}, [searchQuery, kategoriDariURL, sortDariURL, readyToFilter]);
   // --- click outside to close dropdowns (handles both) ---
   useEffect(() => {
     function handleClickOutside(event) {
