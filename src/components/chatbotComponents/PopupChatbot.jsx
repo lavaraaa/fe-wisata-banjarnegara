@@ -11,25 +11,20 @@ const PopupChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   const chatContainerRef = useRef(null);
-  const isUserAtBottomRef = useRef(true); // track posisi scroll user
+  const isUserAtBottomRef = useRef(true);
 
   // cek posisi scroll user
   const handleScroll = () => {
     const container = chatContainerRef.current;
     if (!container) return;
-    const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 20;
-    isUserAtBottomRef.current = atBottom;
+    isUserAtBottomRef.current = container.scrollHeight - container.scrollTop - container.clientHeight < 20;
   };
 
-  // scroll ke bawah full
   const scrollToBottom = (smooth = false) => {
     const container = chatContainerRef.current;
     if (!container) return;
     if (smooth) {
-      container.scrollTo({
-        top: container.scrollHeight,
-        behavior: 'smooth'
-      });
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     } else {
       container.scrollTop = container.scrollHeight;
     }
@@ -38,39 +33,41 @@ const PopupChatbot = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // tambahkan pesan user
-    setMessages(prev => [...prev, { text: input.trim(), user: true }]);
-    setStarted(true);
+    const userMessage = input.trim();
     setInput('');
 
-    // scroll ke bawah saat user mengirim
-    scrollToBottom(true);
+    // Tambahkan pesan user
+    setMessages(prev => [...prev, { text: userMessage, user: true }]);
+    setStarted(true);
+
+    // Scroll ke bawah setelah pesan user
+    setTimeout(() => scrollToBottom(true), 50);
 
     setIsTyping(true);
-    // placeholder titik-titik
+    // Tambahkan placeholder titik-titik
     setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, {
-        query: input.trim()
-      });
+      const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
       const botResponse = res.data.data.response;
 
-      // delay titik-titik sebelum mengetik
+      // delay titik-titik 100ms
       setTimeout(() => {
         let index = 0;
         const typingInterval = setInterval(() => {
           if (index === botResponse.length) {
             clearInterval(typingInterval);
             setIsTyping(false);
-            // hapus flag isLoading
+
+            // hapus isLoading
             setMessages(prev => {
               const updated = [...prev];
               const last = updated[updated.length - 1];
               if (last.isLoading) last.isLoading = false;
               return updated;
             });
-            // scroll sekali full smooth di akhir
+
+            // scroll full smooth di akhir
             if (isUserAtBottomRef.current) scrollToBottom(true);
             return;
           }
@@ -92,7 +89,7 @@ const PopupChatbot = () => {
 
           index++;
         }, 25);
-      }, 100); // delay titik-titik 100ms
+      }, 100);
 
     } catch (error) {
       console.error(error);
@@ -146,9 +143,7 @@ const PopupChatbot = () => {
           placeholder="Ketik pesan..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSend();
-          }}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
           style={{
             flex: 1,
             padding: '8px',
@@ -176,26 +171,24 @@ const PopupChatbot = () => {
   );
 };
 
-const TypingDots = () => {
-  return (
-    <span style={{ display: 'inline-block' }}>
-      <span className="dot">.</span>
-      <span className="dot">.</span>
-      <span className="dot">.</span>
-      <style>{`
-        .dot {
-          animation: blink 1.4s infinite both;
-          margin-right: 2px;
-        }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-          0%, 80%, 100% { opacity: 0; }
-          40% { opacity: 1; }
-        }
-      `}</style>
-    </span>
-  );
-};
+const TypingDots = () => (
+  <span style={{ display: 'inline-block' }}>
+    <span className="dot">.</span>
+    <span className="dot">.</span>
+    <span className="dot">.</span>
+    <style>{`
+      .dot {
+        animation: blink 1.4s infinite both;
+        margin-right: 2px;
+      }
+      .dot:nth-child(2) { animation-delay: 0.2s; }
+      .dot:nth-child(3) { animation-delay: 0.4s; }
+      @keyframes blink {
+        0%, 80%, 100% { opacity: 0; }
+        40% { opacity: 1; }
+      }
+    `}</style>
+  </span>
+);
 
 export default PopupChatbot;
