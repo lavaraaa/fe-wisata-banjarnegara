@@ -60,7 +60,7 @@ const PopupChatbot = () => {
           });
           index++;
         }, 25);
-      }, 800); // titik-titik selama 800ms
+      }, 300); // titik-titik selama 800ms
 
     } catch (error) {
       console.error(error);
