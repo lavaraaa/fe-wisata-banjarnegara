@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { AuthContext } from '../../pages/auth/AuthContext';
 import AnimasiAwal from './AnimasiAwal';
 import axios from 'axios';
@@ -10,18 +10,28 @@ const PopupChatbot = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  const chatEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { text: input.trim(), user: true }]);
+
+    // Tambahkan pesan user
+    setMessages(prev => [...prev, { text: input.trim(), user: true }]);
     setStarted(true);
+
+    // Scroll otomatis hanya saat user mengirim
+    setTimeout(() => {
+      chatContainerRef.current?.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 50);
+
     const userMessage = input.trim();
     setInput('');
 
     setIsTyping(true);
-
-    // tambahkan pesan placeholder untuk animasi titik-titik
+    // Tambahkan placeholder untuk animasi titik-titik
     setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
 
     try {
@@ -30,14 +40,13 @@ const PopupChatbot = () => {
       });
       const botResponse = res.data.data.response;
 
-      // mulai animasi mengetik setelah 800ms (titik-titik muncul dulu)
+      // Delay titik-titik 100ms sebelum mengetik huruf
       setTimeout(() => {
         let index = 0;
         const typingInterval = setInterval(() => {
           if (index === botResponse.length) {
             clearInterval(typingInterval);
             setIsTyping(false);
-            // hapus flag isLoading
             setMessages(prev => {
               const updated = [...prev];
               const last = updated[updated.length - 1];
@@ -60,7 +69,7 @@ const PopupChatbot = () => {
           });
           index++;
         }, 25);
-      }, 100); // titik-titik selama 800ms
+      }, 100);
 
     } catch (error) {
       console.error(error);
@@ -69,13 +78,10 @@ const PopupChatbot = () => {
     }
   };
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   return (
     <>
       <div
+        ref={chatContainerRef}
         style={{
           flex: 1,
           display: 'flex',
@@ -108,7 +114,6 @@ const PopupChatbot = () => {
               {msg.isLoading ? <TypingDots /> : msg.text}
             </div>
           ))}
-        <div ref={chatEndRef} />
       </div>
 
       <div style={{ display: 'flex', padding: '10px', gap: '6px' }}>
