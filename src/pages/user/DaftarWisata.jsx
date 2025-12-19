@@ -97,7 +97,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     if (sortDariURL) {
       if (draftSort !== sortDariURL) {
         setDraftSort(sortDariURL);
-        setSortTerpilih(sortDariURL); // keep final in sync with url on load
+        setSortTerpilih(sortDariURL);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
