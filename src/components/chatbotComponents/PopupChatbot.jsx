@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { AuthContext } from '../../pages/auth/AuthContext';
 import AnimasiAwal from './AnimasiAwal';
 import axios from 'axios';
@@ -17,18 +17,22 @@ const PopupChatbot = () => {
   const handleScroll = () => {
     const container = chatContainerRef.current;
     if (!container) return;
-    // jika scroll berada 20px dari bawah, dianggap di bawah
     const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 20;
     isUserAtBottomRef.current = atBottom;
   };
 
-  const scrollToBottom = () => {
+  // scroll ke bawah full
+  const scrollToBottom = (smooth = false) => {
     const container = chatContainerRef.current;
     if (!container) return;
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: 'smooth'
-    });
+    if (smooth) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth'
+      });
+    } else {
+      container.scrollTop = container.scrollHeight;
+    }
   };
 
   const handleSend = async () => {
@@ -39,8 +43,8 @@ const PopupChatbot = () => {
     setStarted(true);
     setInput('');
 
-    // scroll ke bawah saat user mengirim pesan
-    scrollToBottom();
+    // scroll ke bawah saat user mengirim
+    scrollToBottom(true);
 
     setIsTyping(true);
     // placeholder titik-titik
@@ -52,19 +56,22 @@ const PopupChatbot = () => {
       });
       const botResponse = res.data.data.response;
 
-      // delay titik-titik 100ms
+      // delay titik-titik sebelum mengetik
       setTimeout(() => {
         let index = 0;
         const typingInterval = setInterval(() => {
           if (index === botResponse.length) {
             clearInterval(typingInterval);
             setIsTyping(false);
+            // hapus flag isLoading
             setMessages(prev => {
               const updated = [...prev];
               const last = updated[updated.length - 1];
               if (last.isLoading) last.isLoading = false;
               return updated;
             });
+            // scroll sekali full smooth di akhir
+            if (isUserAtBottomRef.current) scrollToBottom(true);
             return;
           }
 
@@ -80,14 +87,12 @@ const PopupChatbot = () => {
             return updated;
           });
 
-          // scroll otomatis ke bawah jika user di posisi bawah
-          if (isUserAtBottomRef.current) {
-            scrollToBottom();
-          }
+          // scroll instan per huruf jika user di bawah
+          if (isUserAtBottomRef.current) scrollToBottom(false);
 
           index++;
         }, 25);
-      }, 100);
+      }, 100); // delay titik-titik 100ms
 
     } catch (error) {
       console.error(error);
