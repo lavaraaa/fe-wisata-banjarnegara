@@ -8,38 +8,70 @@ const PopupChatbot = () => {
   const [messages, setMessages] = useState([]);
   const [started, setStarted] = useState(false);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
-  // Tambahkan ref untuk container chat
   const chatEndRef = useRef(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
     setMessages([...messages, { text: input.trim(), user: true }]);
-    setStarted(true);    
+    setStarted(true);
     const userMessage = input.trim();
     setInput('');
+
+    setIsTyping(true);
+
+    // tambahkan pesan placeholder untuk animasi titik-titik
+    setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
+
     try {
       const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, {
         query: userMessage
       });
       const botResponse = res.data.data.response;
-      setMessages((prev) => [...prev, { text: botResponse, user: false }]);
+
+      // mulai animasi mengetik setelah 800ms (titik-titik muncul dulu)
+      setTimeout(() => {
+        let index = 0;
+        const typingInterval = setInterval(() => {
+          if (index === botResponse.length) {
+            clearInterval(typingInterval);
+            setIsTyping(false);
+            // hapus flag isLoading
+            setMessages(prev => {
+              const updated = [...prev];
+              const last = updated[updated.length - 1];
+              if (last.isLoading) last.isLoading = false;
+              return updated;
+            });
+            return;
+          }
+
+          setMessages(prev => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last.isLoading) {
+              last.text = botResponse[index];
+              last.isLoading = false;
+            } else {
+              last.text += botResponse[index];
+            }
+            return updated;
+          });
+          index++;
+        }, 25);
+      }, 800); // titik-titik selama 800ms
+
     } catch (error) {
       console.error(error);
-      setMessages((prev) => [
-        ...prev,
-        { text: 'Koneksi gagal', user: false },
-      ]);
+      setMessages(prev => [...prev, { text: 'Koneksi gagal', user: false }]);
+      setIsTyping(false);
     }
   };
 
-  // Scroll otomatis ke bawah setiap kali messages berubah
   useEffect(() => {
-  const timer = setTimeout(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, 200);
-  return () => clearTimeout(timer);
-}, [messages]);
+  }, [messages]);
 
   return (
     <>
@@ -53,7 +85,7 @@ const PopupChatbot = () => {
           position: 'relative',
           overflowY: 'auto',
           padding: '8px',
-          height: '300px', // pastikan ada tinggi tetap
+          height: '300px',
         }}
       >
         {!started && <AnimasiAwal />}
@@ -70,12 +102,12 @@ const PopupChatbot = () => {
                 margin: '4px 2px',
                 maxWidth: '80%',
                 wordBreak: 'break-word',
+                fontStyle: msg.isLoading ? 'italic' : 'normal',
               }}
             >
-              {msg.text}
+              {msg.isLoading ? <TypingDots /> : msg.text}
             </div>
           ))}
-        {/* Elemen kosong untuk scroll ke bawah */}
         <div ref={chatEndRef} />
       </div>
 
@@ -112,6 +144,29 @@ const PopupChatbot = () => {
         </button>
       </div>
     </>
+  );
+};
+
+// Komponen animasi titik-titik
+const TypingDots = () => {
+  return (
+    <span style={{ display: 'inline-block' }}>
+      <span className="dot">.</span>
+      <span className="dot">.</span>
+      <span className="dot">.</span>
+      <style>{`
+        .dot {
+          animation: blink 1.4s infinite both;
+          margin-right: 2px;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink {
+          0%, 80%, 100% { opacity: 0; }
+          40% { opacity: 1; }
+        }
+      `}</style>
+    </span>
   );
 };
 
