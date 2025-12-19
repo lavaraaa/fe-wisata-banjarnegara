@@ -46,7 +46,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const dropdownRef = useRef(null);
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
-  const [readyToFilter, setReadyToFilter] = useState(false);
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -73,42 +72,27 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   };
 
   // --- sync from URL (only set drafts when URL changes, avoid loop with skipURLSyncRef) ---
- useEffect(() => {
+  useEffect(() => {
+  // reset loading / filteredWisata setiap kali kategori dari URL berubah
+  if (!kategoriDariURL) return;
+
+  setLoading(true);           // tampilkan loading
+  setFilteredWisata([]);      // kosongkan sementara
+  setKategoriTerpilih([]);    // reset kategori
+
+  const kategoriArr = kategoriDariURL.includes(',')
+    ? kategoriDariURL.split(',').map(k => k.trim())
+    : [kategoriDariURL];
+
+  // tunggu data siap
   if (allWisata.length > 0) {
-    setReadyToFilter(true);
+    setDraftKategori(kategoriArr);
+    setKategoriTerpilih(kategoriArr);
+    setLoading(false);
   }
-}, [allWisata]);
+}, [kategoriDariURL, allWisata]);
 
-useEffect(() => {
-  if (!readyToFilter) return; // tunggu data siap
 
-  if (skipURLSyncRef.current) {
-    skipURLSyncRef.current = false;
-    return;
-  }
-
-  if (searchQuery && searchQuery !== searchTerm) {
-    setSearchInput(searchQuery);
-    setSearchTerm(searchQuery);
-  }
-
-  if (kategoriDariURL) {
-    const kategoriArr = kategoriDariURL.includes(',')
-      ? kategoriDariURL.split(',').map(k => k.trim())
-      : [kategoriDariURL];
-    if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
-      setDraftKategori(kategoriArr);
-      setKategoriTerpilih(kategoriArr); // nama lama tetap
-    }
-  }
-
-  if (sortDariURL) {
-    if (draftSort !== sortDariURL) {
-      setDraftSort(sortDariURL);
-      setSortTerpilih(sortDariURL);
-    }
-  }
-}, [searchQuery, kategoriDariURL, sortDariURL, readyToFilter]);
   // --- click outside to close dropdowns (handles both) ---
   useEffect(() => {
     function handleClickOutside(event) {
