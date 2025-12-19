@@ -35,8 +35,11 @@ const PopupChatbot = () => {
 
   // Scroll otomatis ke bawah setiap kali messages berubah
   useEffect(() => {
+  const timer = setTimeout(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, 200);
+  return () => clearTimeout(timer);
+}, [messages]);
 
   return (
     <>
