@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { AuthContext } from '../../pages/auth/AuthContext';
 import AnimasiAwal from './AnimasiAwal';
 import axios from 'axios';
@@ -11,36 +11,48 @@ const PopupChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   const chatContainerRef = useRef(null);
+  const isUserAtBottomRef = useRef(true); // track posisi scroll user
+
+  // cek posisi scroll user
+  const handleScroll = () => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+    // jika scroll berada 20px dari bawah, dianggap di bawah
+    const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 20;
+    isUserAtBottomRef.current = atBottom;
+  };
+
+  const scrollToBottom = () => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: 'smooth'
+    });
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // Tambahkan pesan user
+    // tambahkan pesan user
     setMessages(prev => [...prev, { text: input.trim(), user: true }]);
     setStarted(true);
-
-    // Scroll otomatis hanya saat user mengirim
-    setTimeout(() => {
-      chatContainerRef.current?.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, 50);
-
-    const userMessage = input.trim();
     setInput('');
 
+    // scroll ke bawah saat user mengirim pesan
+    scrollToBottom();
+
     setIsTyping(true);
-    // Tambahkan placeholder untuk animasi titik-titik
+    // placeholder titik-titik
     setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
 
     try {
       const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, {
-        query: userMessage
+        query: input.trim()
       });
       const botResponse = res.data.data.response;
 
-      // Delay titik-titik 100ms sebelum mengetik huruf
+      // delay titik-titik 100ms
       setTimeout(() => {
         let index = 0;
         const typingInterval = setInterval(() => {
@@ -67,6 +79,12 @@ const PopupChatbot = () => {
             }
             return updated;
           });
+
+          // scroll otomatis ke bawah jika user di posisi bawah
+          if (isUserAtBottomRef.current) {
+            scrollToBottom();
+          }
+
           index++;
         }, 25);
       }, 100);
@@ -82,6 +100,7 @@ const PopupChatbot = () => {
     <>
       <div
         ref={chatContainerRef}
+        onScroll={handleScroll}
         style={{
           flex: 1,
           display: 'flex',
@@ -152,7 +171,6 @@ const PopupChatbot = () => {
   );
 };
 
-// Komponen animasi titik-titik
 const TypingDots = () => {
   return (
     <span style={{ display: 'inline-block' }}>
