@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { AuthContext } from '../../pages/auth/AuthContext';
 import AnimasiAwal from './AnimasiAwal';
 import axios from 'axios';
@@ -8,6 +8,9 @@ const PopupChatbot = () => {
   const [messages, setMessages] = useState([]);
   const [started, setStarted] = useState(false);
   const [input, setInput] = useState('');
+
+  // Tambahkan ref untuk container chat
+  const chatEndRef = useRef(null);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -30,6 +33,11 @@ const PopupChatbot = () => {
     }
   };
 
+  // Scroll otomatis ke bawah setiap kali messages berubah
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   return (
     <>
       <div
@@ -42,6 +50,7 @@ const PopupChatbot = () => {
           position: 'relative',
           overflowY: 'auto',
           padding: '8px',
+          height: '300px', // pastikan ada tinggi tetap
         }}
       >
         {!started && <AnimasiAwal />}
@@ -63,6 +72,8 @@ const PopupChatbot = () => {
               {msg.text}
             </div>
           ))}
+        {/* Elemen kosong untuk scroll ke bawah */}
+        <div ref={chatEndRef} />
       </div>
 
       <div style={{ display: 'flex', padding: '10px', gap: '6px' }}>
