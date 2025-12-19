@@ -73,25 +73,35 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
   // --- sync from URL (only set drafts when URL changes, avoid loop with skipURLSyncRef) ---
   useEffect(() => {
-  // reset loading / filteredWisata setiap kali kategori dari URL berubah
-  if (!kategoriDariURL) return;
+    if (skipURLSyncRef.current) {
+      // reset flag and skip
+      skipURLSyncRef.current = false;
+      return;
+    }
 
-  setLoading(true);           // tampilkan loading
-  setFilteredWisata([]);      // kosongkan sementara
-  setKategoriTerpilih([]);    // reset kategori
+    if (searchQuery && searchQuery !== searchTerm) {
+      setSearchInput(searchQuery);
+      setSearchTerm(searchQuery);
+    }
 
-  const kategoriArr = kategoriDariURL.includes(',')
-    ? kategoriDariURL.split(',').map(k => k.trim())
-    : [kategoriDariURL];
+    if (kategoriDariURL) {
+      const kategoriArr = kategoriDariURL.includes(',')
+        ? kategoriDariURL.split(',').map(k => k.trim())
+        : [kategoriDariURL];
+      if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
+        setDraftKategori(kategoriArr);
+        setKategoriTerpilih(kategoriArr); // langsung set final too so UI matches URL
+      }
+    }
 
-  // tunggu data siap
-  if (allWisata.length > 0) {
-    setDraftKategori(kategoriArr);
-    setKategoriTerpilih(kategoriArr);
-    setLoading(false);
-  }
-}, [kategoriDariURL, allWisata]);
-
+    if (sortDariURL) {
+      if (draftSort !== sortDariURL) {
+        setDraftSort(sortDariURL);
+        setSortTerpilih(sortDariURL); // keep final in sync with url on load
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, kategoriDariURL, sortDariURL]);
 
   // --- click outside to close dropdowns (handles both) ---
   useEffect(() => {
