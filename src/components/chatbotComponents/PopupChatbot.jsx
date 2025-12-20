@@ -53,27 +53,35 @@ const PopupChatbot = () => {
         { query: userMessage }
       );
 
-      const botResponse = String(res.data.data.response || '');
-      
+      // 🔒 PAKSA STRING
+      const botResponse = String(res.data?.data?.response || '');
+
+      // 🔥 MATIKAN LOADING SEKALI SAJA (BIAR HURUF PERTAMA GA ILANG)
+      setMessages(prev =>
+        prev.map((msg, idx) =>
+          idx === prev.length - 1
+            ? { ...msg, isLoading: false }
+            : msg
+        )
+      );
+
       let index = 0;
 
       const typingInterval = setInterval(() => {
-        if (index >= botResponse.length) {
+        const char = botResponse[index];
+
+        // ⛔ STOP TEPAT SAAT HABIS (ANTI "undefined")
+        if (char === undefined) {
           clearInterval(typingInterval);
           setIsTyping(false);
           if (isUserAtBottomRef.current) scrollToBottom(true);
           return;
         }
 
-        // ✅ TYPING + LOADING JALAN BARENG
         setMessages(prev =>
           prev.map((msg, idx) =>
             idx === prev.length - 1
-              ? {
-                  ...msg,
-                  text: (msg.text || '') + botResponse[index],
-                  isLoading: false,
-                }
+              ? { ...msg, text: (msg.text || '') + char }
               : msg
           )
         );
