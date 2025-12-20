@@ -53,9 +53,8 @@ const PopupChatbot = () => {
         { query: userMessage }
       );
 
-      const botResponse = res.data.data.response;
-
-      // ⬇️ LANGSUNG KETIK, TANPA NUNGGU / DELAY
+      const botResponse = String(res.data.data.response || '');
+      
       let index = 0;
 
       const typingInterval = setInterval(() => {
