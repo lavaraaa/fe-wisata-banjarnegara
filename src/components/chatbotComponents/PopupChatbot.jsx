@@ -51,41 +51,42 @@ const PopupChatbot = () => {
       const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
       const botResponse = res.data.data.response;
 
-      // delay titik-titik 100ms
-     setTimeout(() => {
-  let index = 0;
-  const typingInterval = setInterval(() => {
-    if (index === botResponse.length) {
-      clearInterval(typingInterval);
-      setIsTyping(false);
+      // delay titik-titik (misal 100ms)
+      setTimeout(() => {
+        let index = 0;
+        const typingInterval = setInterval(() => {
 
-      // hapus flag isLoading setelah selesai semua huruf
-      setMessages(prev => {
-        const updated = [...prev];
-        const last = updated[updated.length - 1];
-        last.isLoading = false;
-        return updated;
-      });
+          // selesai mengetik
+          if (index === botResponse.length) {
+            clearInterval(typingInterval);
+            setIsTyping(false);
 
-      if (isUserAtBottomRef.current) scrollToBottom(true);
-      return;
-    }
+            // hapus isLoading setelah semua huruf muncul
+            setMessages(prev => {
+              const updated = [...prev];
+              const last = updated[updated.length - 1];
+              last.isLoading = false;
+              return updated;
+            });
 
-    // tambahkan huruf per index
-    setMessages(prev => {
-      const updated = [...prev];
-      const last = updated[updated.length - 1];
-      last.text += botResponse[index];  // tambah huruf
-      return updated;
-    });
+            if (isUserAtBottomRef.current) scrollToBottom(true);
+            return;
+          }
 
-    // scroll instan per huruf jika user di bawah
-    if (isUserAtBottomRef.current) scrollToBottom(false);
+          // tambahkan huruf per index ke last.text
+          setMessages(prev => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            last.text += botResponse[index]; // HURUF PERTAMA DAN SETERUSNYA TIDAK HILANG
+            return updated;
+          });
 
-    index++;
-  }, 25);
-}, 100);
+          // scroll instan per huruf jika user di bawah
+          if (isUserAtBottomRef.current) scrollToBottom(false);
 
+          index++;
+        }, 25);
+      }, 100);
 
     } catch (error) {
       console.error(error);
