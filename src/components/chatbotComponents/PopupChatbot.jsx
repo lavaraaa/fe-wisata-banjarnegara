@@ -52,39 +52,44 @@ const PopupChatbot = () => {
       const botResponse = res.data.data.response;
 
       // delay titik-titik 100ms
-    setTimeout(() => {
-  let index = 0;
-  const typingInterval = setInterval(() => {
-    if (index === botResponse.length) {
-      clearInterval(typingInterval);
-      setIsTyping(false);
+      setTimeout(() => {
+        let index = 0;
+        const typingInterval = setInterval(() => {
+          if (index === botResponse.length) {
+            clearInterval(typingInterval);
+            setIsTyping(false);
 
-      // hapus flag isLoading setelah selesai semua huruf
-      setMessages(prev => {
-        const updated = [...prev];
-        const last = updated[updated.length - 1];
-        last.isLoading = false;
-        return updated;
-      });
+            // hapus isLoading
+            setMessages(prev => {
+              const updated = [...prev];
+              const last = updated[updated.length - 1];
+              if (last.isLoading) last.isLoading = false;
+              return updated;
+            });
 
-      if (isUserAtBottomRef.current) scrollToBottom(true);
-      return;
-    }
+            // scroll full smooth di akhir
+            if (isUserAtBottomRef.current) scrollToBottom(true);
+            return;
+          }
 
-    // tambahkan huruf satu per satu
-    setMessages(prev => {
-      const updated = [...prev];
-      const last = updated[updated.length - 1];
-      last.text += botResponse[index];
-      return updated;
-    });
+          setMessages(prev => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last.isLoading) {
+              last.text = botResponse[index];
+              last.isLoading = false;
+            } else {
+              last.text += botResponse[index];
+            }
+            return updated;
+          });
 
-    if (isUserAtBottomRef.current) scrollToBottom(false);
+          // scroll instan per huruf jika user di bawah
+          if (isUserAtBottomRef.current) scrollToBottom(false);
 
-    index++;
-  }, 25);
-}, 100);
-
+          index++;
+        }, 25);
+      }, 100);
 
     } catch (error) {
       console.error(error);
