@@ -31,72 +31,67 @@ const PopupChatbot = () => {
   };
 
   const handleSend = async () => {
-  if (!input.trim()) return;
+    if (!input.trim()) return;
 
-  const userMessage = input.trim();
-  setInput('');
+    const userMessage = input.trim();
+    setInput('');
 
-  // Tambahkan pesan user
-  setMessages(prev => [...prev, { text: userMessage, user: true }]);
-  setStarted(true);
+    // Tambahkan pesan user
+    setMessages(prev => [...prev, { text: userMessage, user: true }]);
+    setStarted(true);
 
-  // Scroll ke bawah setelah pesan user
-  setTimeout(() => scrollToBottom(true), 50);
+    // Scroll ke bawah setelah pesan user
+    setTimeout(() => scrollToBottom(true), 50);
 
-  setIsTyping(true);
-  // Tambahkan placeholder titik-titik
-  setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
+    setIsTyping(true);
+    // Tambahkan placeholder titik-titik
+    setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
 
-  try {
-    const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
-    const botResponse = res.data.data.response;
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
+      const botResponse = res.data.data.response;
 
-    // delay titik-titik 100ms
+      // delay titik-titik 100ms
     setTimeout(() => {
-      let index = 0;
-      const typingInterval = setInterval(() => {
-        const container = chatContainerRef.current;
-        // selesai mengetik
-        if (index === botResponse.length) {
-          clearInterval(typingInterval);
-          setIsTyping(false);
+  let index = 0;
+  const typingInterval = setInterval(() => {
+    if (index === botResponse.length) {
+      clearInterval(typingInterval);
+      setIsTyping(false);
 
-          // hapus flag isLoading setelah selesai
-          setMessages(prev => {
-            const updated = [...prev];
-            const last = updated[updated.length - 1];
-            last.isLoading = false;
-            return updated;
-          });
+      // hapus flag isLoading setelah selesai semua huruf
+      setMessages(prev => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        last.isLoading = false;
+        return updated;
+      });
 
-          if (isUserAtBottomRef.current) scrollToBottom(true);
-          return;
-        }
+      if (isUserAtBottomRef.current) scrollToBottom(true);
+      return;
+    }
 
-        // tambahkan huruf per index
-        setMessages(prev => {
-          const updated = [...prev];
-          const last = updated[updated.length - 1];
-          last.text += botResponse[index];
-          return updated;
-        });
+    // tambahkan huruf satu per satu
+    setMessages(prev => {
+      const updated = [...prev];
+      const last = updated[updated.length - 1];
+      last.text += botResponse[index];
+      return updated;
+    });
 
-        // scroll instan per huruf jika user di bawah
-        if (isUserAtBottomRef.current && container) {
-          container.scrollTop = container.scrollHeight;
-        }
+    if (isUserAtBottomRef.current) scrollToBottom(false);
 
-        index++;
-      }, 25);
-    }, 100);
+    index++;
+  }, 25);
+}, 100);
 
-  } catch (error) {
-    console.error(error);
-    setMessages(prev => [...prev, { text: 'Koneksi gagal', user: false }]);
-    setIsTyping(false);
-  }
-};
 
+    } catch (error) {
+      console.error(error);
+      setMessages(prev => [...prev, { text: 'Koneksi gagal', user: false }]);
+      setIsTyping(false);
+    }
+  };
 
   return (
     <>
