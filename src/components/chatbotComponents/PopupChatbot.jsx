@@ -52,44 +52,40 @@ const PopupChatbot = () => {
       const botResponse = res.data.data.response;
 
       // delay titik-titik 100ms
-      setTimeout(() => {
-        let index = 0;
-        const typingInterval = setInterval(() => {
-          if (index === botResponse.length) {
-            clearInterval(typingInterval);
-            setIsTyping(false);
+     setTimeout(() => {
+  let index = 0;
+  const typingInterval = setInterval(() => {
+    if (index === botResponse.length) {
+      clearInterval(typingInterval);
+      setIsTyping(false);
 
-            // hapus isLoading
-            setMessages(prev => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              if (last.isLoading) last.isLoading = false;
-              return updated;
-            });
+      // hapus flag isLoading setelah selesai semua huruf
+      setMessages(prev => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        last.isLoading = false;
+        return updated;
+      });
 
-            // scroll full smooth di akhir
-            if (isUserAtBottomRef.current) scrollToBottom(true);
-            return;
-          }
+      if (isUserAtBottomRef.current) scrollToBottom(true);
+      return;
+    }
 
-          setMessages(prev => {
-            const updated = [...prev];
-            const last = updated[updated.length - 1];
-            if (last.isLoading) {
-              last.text = botResponse[index];
-              last.isLoading = false;
-            } else {
-              last.text += botResponse[index];
-            }
-            return updated;
-          });
+    // tambahkan huruf per index
+    setMessages(prev => {
+      const updated = [...prev];
+      const last = updated[updated.length - 1];
+      last.text += botResponse[index];  // tambah huruf
+      return updated;
+    });
 
-          // scroll instan per huruf jika user di bawah
-          if (isUserAtBottomRef.current) scrollToBottom(false);
+    // scroll instan per huruf jika user di bawah
+    if (isUserAtBottomRef.current) scrollToBottom(false);
 
-          index++;
-        }, 25);
-      }, 100);
+    index++;
+  }, 25);
+}, 100);
+
 
     } catch (error) {
       console.error(error);
