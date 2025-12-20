@@ -51,35 +51,39 @@ const PopupChatbot = () => {
       const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
       const botResponse = res.data.data.response;
 
-      // delay titik-titik (misal 100ms)
+      // delay titik-titik 100ms
       setTimeout(() => {
         let index = 0;
         const typingInterval = setInterval(() => {
+      if (index === botResponse.length) {
+  clearInterval(typingInterval);
+  setIsTyping(false);
 
-          // selesai mengetik
-          if (index === botResponse.length) {
-            clearInterval(typingInterval);
-            setIsTyping(false);
+  setMessages(prev => {
+    const updated = [...prev];
+    const last = updated[updated.length - 1];
+    last.isLoading = false; // hapus flag setelah semua huruf muncul
+    return updated;
+  });
 
-            // hapus isLoading setelah semua huruf muncul
-            setMessages(prev => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              last.isLoading = false;
-              return updated;
-            });
+  if (isUserAtBottomRef.current) scrollToBottom(true);
+  return;
+}
 
-            if (isUserAtBottomRef.current) scrollToBottom(true);
-            return;
-          }
+         setMessages(prev => {
+  const updated = [...prev];
+  const last = updated[updated.length - 1];
 
-          // tambahkan huruf per index ke last.text
-          setMessages(prev => {
-            const updated = [...prev];
-            const last = updated[updated.length - 1];
-            last.text += botResponse[index]; // HURUF PERTAMA DAN SETERUSNYA TIDAK HILANG
-            return updated;
-          });
+  // Jika isLoading, biarkan teks tetap kosong dulu
+  if (last.isLoading && index === 0) {
+    last.text = botResponse[0]; // huruf pertama muncul
+  } else {
+    last.text += botResponse[index];
+  }
+
+  return updated;
+});
+
 
           // scroll instan per huruf jika user di bawah
           if (isUserAtBottomRef.current) scrollToBottom(false);
