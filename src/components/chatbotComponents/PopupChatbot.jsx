@@ -17,7 +17,8 @@ const PopupChatbot = () => {
   const handleScroll = () => {
     const container = chatContainerRef.current;
     if (!container) return;
-    isUserAtBottomRef.current = container.scrollHeight - container.scrollTop - container.clientHeight < 20;
+    isUserAtBottomRef.current =
+      container.scrollHeight - container.scrollTop - container.clientHeight < 20;
   };
 
   const scrollToBottom = (smooth = false) => {
@@ -36,61 +37,51 @@ const PopupChatbot = () => {
     const userMessage = input.trim();
     setInput('');
 
-    // Tambahkan pesan user
+    // pesan user
     setMessages(prev => [...prev, { text: userMessage, user: true }]);
     setStarted(true);
-
-    // Scroll ke bawah setelah pesan user
     setTimeout(() => scrollToBottom(true), 50);
 
     setIsTyping(true);
-    // Tambahkan placeholder titik-titik
+
+    // placeholder loading
     setMessages(prev => [...prev, { text: '', user: false, isLoading: true }]);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_CHATBOT_URL}/chat/query`, { query: userMessage });
+      const res = await axios.post(
+        `${import.meta.env.VITE_CHATBOT_URL}/chat/query`,
+        { query: userMessage }
+      );
+
       const botResponse = res.data.data.response;
 
-      // delay titik-titik 100ms
-      setTimeout(() => {
-        let index = 0;
-        const typingInterval = setInterval(() => {
-          if (index === botResponse.length) {
-            clearInterval(typingInterval);
-            setIsTyping(false);
+      // ⬇️ LANGSUNG KETIK, TANPA NUNGGU / DELAY
+      let index = 0;
 
-            // hapus isLoading
-            setMessages(prev => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              if (last.isLoading) last.isLoading = false;
-              return updated;
-            });
+      const typingInterval = setInterval(() => {
+        if (index >= botResponse.length) {
+          clearInterval(typingInterval);
+          setIsTyping(false);
+          if (isUserAtBottomRef.current) scrollToBottom(true);
+          return;
+        }
 
-            // scroll full smooth di akhir
-            if (isUserAtBottomRef.current) scrollToBottom(true);
-            return;
-          }
+        // ✅ TYPING + LOADING JALAN BARENG
+        setMessages(prev =>
+          prev.map((msg, idx) =>
+            idx === prev.length - 1
+              ? {
+                  ...msg,
+                  text: (msg.text || '') + botResponse[index],
+                  isLoading: false,
+                }
+              : msg
+          )
+        );
 
-          setMessages(prev => {
-            const updated = [...prev];
-            const last = updated[updated.length - 1];
-            if (last.isLoading) {
-              last.text = botResponse[index];
-              last.isLoading = false;
-            } else {
-              last.text += botResponse[index];
-            }
-            return updated;
-          });
-
-          // scroll instan per huruf jika user di bawah
-          if (isUserAtBottomRef.current) scrollToBottom(false);
-
-          index++;
-        }, 25);
-      }, 100);
-
+        if (isUserAtBottomRef.current) scrollToBottom(false);
+        index++;
+      }, 25);
     } catch (error) {
       console.error(error);
       setMessages(prev => [...prev, { text: 'Koneksi gagal', user: false }]);
@@ -116,6 +107,7 @@ const PopupChatbot = () => {
         }}
       >
         {!started && <AnimasiAwal />}
+
         {started &&
           messages.map((msg, i) => (
             <div
@@ -143,7 +135,9 @@ const PopupChatbot = () => {
           placeholder="Ketik pesan..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSend();
+          }}
           style={{
             flex: 1,
             padding: '8px',
@@ -152,6 +146,7 @@ const PopupChatbot = () => {
             borderRadius: 10,
           }}
         />
+
         <button
           onClick={handleSend}
           style={{
