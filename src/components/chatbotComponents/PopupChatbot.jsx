@@ -114,58 +114,46 @@ const PopupChatbot = () => {
         }}
       >
         {!started && <AnimasiAwal />}
-
         {started &&
-          messages.map((msg, i) => (
-            <div
-              key={i}
-              style={{
-                alignSelf: msg.user ? 'flex-end' : 'flex-start',
-                backgroundColor: msg.user ? '#015E78' : '#e0e0e0',
-                color: msg.user ? '#fff' : '#000',
-                padding: '5px 10px',
-                borderRadius: '13px',
-                margin: '4px 2px',
-                maxWidth: '80%',
-                wordBreak: 'break-word',
-                fontStyle: msg.isLoading ? 'italic' : 'normal',
-              }}
-            >
+        messages.map((msg, i) => (
+        <div
+          key={i}
+            style={{
+              alignSelf: msg.user ? 'flex-end' : 'flex-start',
+              backgroundColor: msg.user ? '#015E78' : '#e0e0e0',
+              color: msg.user ? '#fff' : '#000',
+              padding: '5px 10px',
+              borderRadius: '13px',
+              margin: '4px 2px',
+              maxWidth: '80%',
+              wordBreak: 'break-word',
+              fontStyle: msg.isLoading ? 'italic' : 'normal',
+              }}>
               {msg.isLoading ? <TypingDots /> : msg.text}
             </div>
           ))}
       </div>
-
       <div style={{ display: 'flex', padding: '10px', gap: '6px' }}>
-        <input
-          type="text"
-          placeholder="Ketik pesan..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSend();
-          }}
-          style={{
-            flex: 1,
-            padding: '8px',
-            border: '1px solid #ccc',
-            outline: 'none',
-            borderRadius: 10,
-          }}
-        />
-
-        <button
-          onClick={handleSend}
-          style={{
-            backgroundColor: '#015E78',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '5px 10px',
-            cursor: 'pointer',
-            fontSize: '18px',
-          }}
-        >
+      <input
+        type="text"
+        placeholder="Ketik pesan..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+        if (e.key === 'Enter') handleSend();
+        }}
+  style={{ flex: 1, padding: '8px', border: '1px solid #ccc', outline: 'none', borderRadius: 10,}}/>
+    <button
+      onClick={handleSend}
+        style={{
+          backgroundColor: '#015E78',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          padding: '5px 10px',
+          cursor: 'pointer',
+          fontSize: '18px',
+      }}>
           <i className="bi bi-send-fill"></i>
         </button>
       </div>
