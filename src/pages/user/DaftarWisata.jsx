@@ -41,7 +41,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
   const [loading, setLoading] = useState(true);
 
-  // 🔥 KUNCI HILANGKAN KEDIP
+  // 🔥 FLAG ANTI KEDIP
   const [filterReady, setFilterReady] = useState(false);
 
   const location = useLocation();
@@ -78,7 +78,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   };
 
-  // ===== AMBIL STATE DARI URL (KHUSUS HOME / REFRESH) =====
+  // ===== AMBIL STATE DARI URL (HOME / REFRESH) =====
   useEffect(() => {
     if (skipURLSyncRef.current) {
       skipURLSyncRef.current = false;
@@ -105,7 +105,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
-  // ===== CLOSE DROPDOWN ON OUTSIDE CLICK =====
+  // ===== CLICK OUTSIDE DROPDOWN =====
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -120,7 +120,32 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ===== FILTER + SORT (DEBOUNCE TETAP ADA, TIDAK DIUBAH) =====
+  // ===== APPLY SEARCH + FILTER (NAMA ASLI, TIDAK DIUBAH) =====
+  const handleApplySearchAndFilter = () => {
+    setSearchTerm(searchInput.trim());
+    setKategoriTerpilih(draftKategori);
+    setSortTerpilih(draftSort);
+
+    setDropdownOpen(false);
+    setSortDropdownOpen(false);
+
+    skipURLSyncRef.current = true;
+
+    const params = new URLSearchParams(location.search);
+
+    if (searchInput.trim()) params.set('search', searchInput.trim());
+    else params.delete('search');
+
+    if (draftKategori.length > 0) params.set('kategori', draftKategori.join(','));
+    else params.delete('kategori');
+
+    if (draftSort) params.set('sort', draftSort);
+    else params.delete('sort');
+
+    navigate(`?${params.toString()}`, { replace: true });
+  };
+
+  // ===== FILTER + SORT (ANTI KEDIP) =====
   useEffect(() => {
     if (allWisata.length === 0) return;
 
@@ -163,17 +188,16 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
       setFilteredWisata(result);
       setLoading(false);
-      setFilterReady(true); // 🔥 INI PENENTU
+      setFilterReady(true);
     }, 300);
 
     return () => clearTimeout(timer);
   }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih]);
 
-  // 🔥 BLOK RENDER SEBELUM FILTER SIAP (ANTI KEDIP)
+  // ===== BLOK RENDER SEBELUM FILTER SIAP =====
   if (!filterReady) {
     return <Loading />;
   }
-
 
 
   return (
