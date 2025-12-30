@@ -26,23 +26,15 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [allWisata, setAllWisata] = useState([]);
   const [filteredWisata, setFilteredWisata] = useState([]);
   const [wisataList, setWisataList] = useState([]);
-
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
   const [draftKategori, setDraftKategori] = useState([]);
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [draftSort, setDraftSort] = useState('');
   const [sortTerpilih, setSortTerpilih] = useState('');
-
-  const [loading, setLoading] = useState(true);
-
-  // 🔥 FLAG ANTI KEDIP
-  const [filterReady, setFilterReady] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -56,12 +48,13 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
 
-  // ===== FETCH DATA =====
+  // ================= FETCH DATA =================
   useEffect(() => {
     if (data && data.length > 0) {
       setWisataList(data);
       setAllWisata(data);
-    } else {
+      // ❌ JANGAN setFilteredWisata di sini
+    } else if (wisataList.length === 0) {
       fetchDataWisata();
     }
   }, [data]);
@@ -73,12 +66,14 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       const wisataData = await res.json();
       setWisataList(wisataData);
       setAllWisata(wisataData);
+      // ❌ JANGAN setFilteredWisata di sini
     } catch (err) {
       console.error('Gagal memuat data wisata:', err);
+      setLoading(false);
     }
   };
 
-  // ===== AMBIL STATE DARI URL (HOME / REFRESH) =====
+  // ================= URL → STATE =================
   useEffect(() => {
     if (skipURLSyncRef.current) {
       skipURLSyncRef.current = false;
@@ -95,44 +90,65 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
         ? kategoriDariURL.split(',').map(k => k.trim())
         : [kategoriDariURL];
 
-      setDraftKategori(kategoriArr);
-      setKategoriTerpilih(kategoriArr);
+      if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
+        setDraftKategori(kategoriArr);
+        setKategoriTerpilih(kategoriArr);
+      }
     }
 
     if (sortDariURL) {
-      setDraftSort(sortDariURL);
-      setSortTerpilih(sortDariURL);
+      if (draftSort !== sortDariURL) {
+        setDraftSort(sortDariURL);
+        setSortTerpilih(sortDariURL);
+      }
     }
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
-  // ===== CLICK OUTSIDE DROPDOWN =====
+  // ================= CLICK OUTSIDE =================
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
         setSortDropdownOpen(false);
       }
-    };
+    }
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ===== APPLY SEARCH + FILTER (NAMA ASLI, TIDAK DIUBAH) =====
+  // ================= FILTER HANDLER =================
+  const handleCheckboxChange = (kategori) => {
+    if (kategori === 'Semua Wisata') {
+      setDraftKategori(draftKategori.includes('Semua Wisata') ? [] : ['Semua Wisata']);
+    } else {
+      const isChecked = draftKategori.includes(kategori);
+      const newKategori = isChecked
+        ? draftKategori.filter(k => k !== kategori)
+        : [...draftKategori.filter(k => k !== 'Semua Wisata'), kategori];
+      setDraftKategori(newKategori);
+    }
+  };
+
+  const handleDraftSortChange = (option) => {
+    setDraftSort(draftSort === option ? '' : option);
+  };
+
+  // ================= APPLY =================
   const handleApplySearchAndFilter = () => {
+    setLoading(true); // ✅ PENTING
+
     setSearchTerm(searchInput.trim());
     setKategoriTerpilih(draftKategori);
     setSortTerpilih(draftSort);
 
     setDropdownOpen(false);
     setSortDropdownOpen(false);
-
     skipURLSyncRef.current = true;
 
     const params = new URLSearchParams(location.search);
-
     if (searchInput.trim()) params.set('search', searchInput.trim());
     else params.delete('search');
 
@@ -145,14 +161,11 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     navigate(`?${params.toString()}`, { replace: true });
   };
 
-  // ===== FILTER + SORT (ANTI KEDIP) =====
+  // ================= FILTER + SORT =================
   useEffect(() => {
-    if (allWisata.length === 0) return;
-
     const timer = setTimeout(() => {
-      const result = allWisata.filter(item => {
-        const cocokSearch =
-          item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
+      const result = allWisata.filter((item) => {
+        const cocokSearch = item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
 
         let itemKategori = [];
         try {
@@ -188,14 +201,12 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
       setFilteredWisata(result);
       setLoading(false);
-      setFilterReady(true);
     }, 300);
 
     return () => clearTimeout(timer);
   }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih]);
 
-  // ===== BLOK RENDER SEBELUM FILTER SIAP =====
-  if (!filterReady) {
+  if (loading) {
     return <Loading />;
   }
 
