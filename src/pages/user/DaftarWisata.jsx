@@ -4,6 +4,9 @@ import CardWisata from '../../components/common/cardComponents/CardWisata';
 import { Icon } from '@iconify/react';
 import Loading from '../../components/common/Loading';
 
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 const daftarKategori = [
   'Dieng',
   'Wisata Alam',
@@ -36,13 +39,15 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [sortTerpilih, setSortTerpilih] = useState('');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
+  // ✅ TAMBAHAN (FLAG SIAP)
+  const [isReady, setIsReady] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const kategoriDariURL = queryParams.get('kategori');
   const searchQuery = queryParams.get('search');
   const sortDariURL = queryParams.get('sort');
-
   const dropdownRef = useRef(null);
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
@@ -71,10 +76,11 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   };
 
-  // --- sync from URL (only set drafts when URL changes, avoid loop with skipURLSyncRef) ---
+  // =========================
+  // URL → STATE SYNC
+  // =========================
   useEffect(() => {
     if (skipURLSyncRef.current) {
-      // reset flag and skip
       skipURLSyncRef.current = false;
       return;
     }
@@ -88,22 +94,25 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       const kategoriArr = kategoriDariURL.includes(',')
         ? kategoriDariURL.split(',').map(k => k.trim())
         : [kategoriDariURL];
+
       if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
         setDraftKategori(kategoriArr);
-        setKategoriTerpilih(kategoriArr); // langsung set final too so UI matches URL
+        setKategoriTerpilih(kategoriArr);
       }
     }
 
     if (sortDariURL) {
       if (draftSort !== sortDariURL) {
         setDraftSort(sortDariURL);
-        setSortTerpilih(sortDariURL); // keep final in sync with url on load
+        setSortTerpilih(sortDariURL);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // ✅ TANDAI SIAP SETELAH URL DISERAP
+    setIsReady(true);
+
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
-  // --- click outside to close dropdowns (handles both) ---
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -129,49 +138,46 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   };
 
-  // draftSort is temporary selection. Use single-select behavior (like you wanted)
   const handleDraftSortChange = (option) => {
     setDraftSort(draftSort === option ? '' : option);
   };
 
-  // APPLY button: set final values (searchTerm, kategoriTerpilih, sortTerpilih) and update URL
   const handleApplySearchAndFilter = () => {
-    // Set final states from drafts
     setSearchTerm(searchInput.trim());
     setKategoriTerpilih(draftKategori);
-    setSortTerpilih(draftSort); // <-- crucial: only when TERAPKAN is pressed
-
-    // close dropdowns
+    setSortTerpilih(draftSort);
     setDropdownOpen(false);
     setSortDropdownOpen(false);
-
     skipURLSyncRef.current = true;
-    const params = new URLSearchParams(location.search);
 
+    const params = new URLSearchParams(location.search);
     if (searchInput.trim()) params.set('search', searchInput.trim());
     else params.delete('search');
-
     if (draftKategori.length > 0) params.set('kategori', draftKategori.join(','));
     else params.delete('kategori');
-
     if (draftSort) params.set('sort', draftSort);
     else params.delete('sort');
 
     navigate(`?${params.toString()}`, { replace: true });
   };
 
-  // useEffect: filter (by final searchTerm & kategoriTerpilih) and THEN sort (by sortTerpilih).
-  // IMPORTANT: depends on sortTerpilih (final) so sorting only runs after Apply changed it.
+  // =========================
+  // FILTER & SORT
+  // =========================
   useEffect(() => {
+    if (!isReady) return; // ⛔ STOP FILTER DI RENDER PERTAMA
+
     const timer = setTimeout(() => {
       const result = allWisata.filter((item) => {
         const cocokSearch = item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
+
         let itemKategori = [];
         try {
           itemKategori = item.kategori ? JSON.parse(item.kategori) : [];
         } catch {
           itemKategori = [];
         }
+
         const cocokKategori =
           kategoriTerpilih.length === 0 ||
           kategoriTerpilih.includes('Semua Wisata') ||
@@ -180,7 +186,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
         return cocokSearch && cocokKategori;
       });
 
-      // SORT based on final selection (sortTerpilih) — will only change after TERAPKAN
       switch (sortTerpilih) {
         case 'Baru Ditambahkan':
           result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -203,14 +208,12 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih]);
+  }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih, isReady]);
 
-  // If loading true show Loading
   if (loading) {
     return <Loading />;
   }
 
-  // --- Render ---
   return (
     <main className="mx-auto my-4 px-4" style={{ maxWidth: '1150px' }}>
       <div className="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 mb-3" style={{ maxWidth: '1100px', margin: '0 auto', }}>
