@@ -26,18 +26,27 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [allWisata, setAllWisata] = useState([]);
   const [filteredWisata, setFilteredWisata] = useState([]);
   const [wisataList, setWisataList] = useState([]);
+
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
   const [draftKategori, setDraftKategori] = useState([]);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+
   const [draftSort, setDraftSort] = useState('');
   const [sortTerpilih, setSortTerpilih] = useState('');
-  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
+  // 🔥 KUNCI HILANGKAN KEDIP
+  const [filterReady, setFilterReady] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
+
   const queryParams = new URLSearchParams(location.search);
   const kategoriDariURL = queryParams.get('kategori');
   const searchQuery = queryParams.get('search');
@@ -47,17 +56,12 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
 
-  // 🔥 FLAG KHUSUS: hanya aktif saat datang dari URL (Home / refresh)
-  const isInitialURLLoad = useRef(
-    Boolean(searchQuery || kategoriDariURL || sortDariURL)
-  );
-
+  // ===== FETCH DATA =====
   useEffect(() => {
     if (data && data.length > 0) {
       setWisataList(data);
       setAllWisata(data);
-      setFilteredWisata(data);
-    } else if (wisataList.length === 0) {
+    } else {
       fetchDataWisata();
     }
   }, [data]);
@@ -69,14 +73,12 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       const wisataData = await res.json();
       setWisataList(wisataData);
       setAllWisata(wisataData);
-      setFilteredWisata(wisataData);
     } catch (err) {
       console.error('Gagal memuat data wisata:', err);
-      setLoading(false);
     }
   };
 
-  // URL → state sync (TIDAK DIUBAH)
+  // ===== AMBIL STATE DARI URL (KHUSUS HOME / REFRESH) =====
   useEffect(() => {
     if (skipURLSyncRef.current) {
       skipURLSyncRef.current = false;
@@ -93,71 +95,39 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
         ? kategoriDariURL.split(',').map(k => k.trim())
         : [kategoriDariURL];
 
-      if (JSON.stringify(draftKategori) !== JSON.stringify(kategoriArr)) {
-        setDraftKategori(kategoriArr);
-        setKategoriTerpilih(kategoriArr);
-      }
+      setDraftKategori(kategoriArr);
+      setKategoriTerpilih(kategoriArr);
     }
 
-    if (sortDariURL && draftSort !== sortDariURL) {
+    if (sortDariURL) {
       setDraftSort(sortDariURL);
       setSortTerpilih(sortDariURL);
     }
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
+  // ===== CLOSE DROPDOWN ON OUTSIDE CLICK =====
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
         setSortDropdownOpen(false);
       }
-    }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleCheckboxChange = (kategori) => {
-    if (kategori === 'Semua Wisata') {
-      setDraftKategori(draftKategori.includes('Semua Wisata') ? [] : ['Semua Wisata']);
-    } else {
-      const isChecked = draftKategori.includes(kategori);
-      const newKategori = isChecked
-        ? draftKategori.filter(k => k !== kategori)
-        : [...draftKategori.filter(k => k !== 'Semua Wisata'), kategori];
-      setDraftKategori(newKategori);
-    }
-  };
-
-  const handleDraftSortChange = (option) => {
-    setDraftSort(draftSort === option ? '' : option);
-  };
-
-  const handleApplySearchAndFilter = () => {
-    setSearchTerm(searchInput.trim());
-    setKategoriTerpilih(draftKategori);
-    setSortTerpilih(draftSort);
-    setDropdownOpen(false);
-    setSortDropdownOpen(false);
-    skipURLSyncRef.current = true;
-
-    const params = new URLSearchParams(location.search);
-    if (searchInput.trim()) params.set('search', searchInput.trim());
-    else params.delete('search');
-    if (draftKategori.length > 0) params.set('kategori', draftKategori.join(','));
-    else params.delete('kategori');
-    if (draftSort) params.set('sort', draftSort);
-    else params.delete('sort');
-
-    navigate(`?${params.toString()}`, { replace: true });
-  };
-
-  // FILTER & SORT (LOGIKA ASLI — TIDAK DIUBAH)
+  // ===== FILTER + SORT (DEBOUNCE TETAP ADA, TIDAK DIUBAH) =====
   useEffect(() => {
+    if (allWisata.length === 0) return;
+
     const timer = setTimeout(() => {
-      const result = allWisata.filter((item) => {
-        const cocokSearch = item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
+      const result = allWisata.filter(item => {
+        const cocokSearch =
+          item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
 
         let itemKategori = [];
         try {
@@ -193,23 +163,19 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
       setFilteredWisata(result);
       setLoading(false);
-
-      // 🔥 MATIKAN FLAG SETELAH FILTER PERTAMA
-      isInitialURLLoad.current = false;
+      setFilterReady(true); // 🔥 INI PENENTU
     }, 300);
 
     return () => clearTimeout(timer);
   }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih]);
 
-  // 🔥 GUARD RENDER (INI KUNCI ANTI KEDIP)
-  if (
-    loading ||
-    (isInitialURLLoad.current &&
-      ((searchQuery && searchTerm === '') ||
-       (kategoriDariURL && kategoriTerpilih.length === 0)))
-  ) {
+  // 🔥 BLOK RENDER SEBELUM FILTER SIAP (ANTI KEDIP)
+  if (!filterReady) {
     return <Loading />;
   }
+
+
+
   return (
     <main className="mx-auto my-4 px-4" style={{ maxWidth: '1150px' }}>
       <div className="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 mb-3" style={{ maxWidth: '1100px', margin: '0 auto', }}>
