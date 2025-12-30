@@ -38,7 +38,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
-
   const queryParams = new URLSearchParams(location.search);
   const kategoriDariURL = queryParams.get('kategori');
   const searchQuery = queryParams.get('search');
@@ -48,12 +47,11 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
 
-  // ================= FETCH DATA =================
   useEffect(() => {
     if (data && data.length > 0) {
       setWisataList(data);
       setAllWisata(data);
-      // ❌ JANGAN setFilteredWisata di sini
+      setFilteredWisata(data);
     } else if (wisataList.length === 0) {
       fetchDataWisata();
     }
@@ -64,16 +62,17 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       setLoading(true);
       const res = await fetch('/api/wisata');
       const wisataData = await res.json();
+
       setWisataList(wisataData);
       setAllWisata(wisataData);
-      // ❌ JANGAN setFilteredWisata di sini
+      // ❌ DIHAPUS: setFilteredWisata(wisataData)
+
     } catch (err) {
       console.error('Gagal memuat data wisata:', err);
       setLoading(false);
     }
   };
 
-  // ================= URL → STATE =================
   useEffect(() => {
     if (skipURLSyncRef.current) {
       skipURLSyncRef.current = false;
@@ -104,7 +103,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
-  // ================= CLICK OUTSIDE =================
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -114,12 +112,10 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
         setSortDropdownOpen(false);
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ================= FILTER HANDLER =================
   const handleCheckboxChange = (kategori) => {
     if (kategori === 'Semua Wisata') {
       setDraftKategori(draftKategori.includes('Semua Wisata') ? [] : ['Semua Wisata']);
@@ -136,14 +132,10 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     setDraftSort(draftSort === option ? '' : option);
   };
 
-  // ================= APPLY =================
   const handleApplySearchAndFilter = () => {
-    setLoading(true); // ✅ PENTING
-
     setSearchTerm(searchInput.trim());
     setKategoriTerpilih(draftKategori);
     setSortTerpilih(draftSort);
-
     setDropdownOpen(false);
     setSortDropdownOpen(false);
     skipURLSyncRef.current = true;
@@ -161,7 +153,6 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     navigate(`?${params.toString()}`, { replace: true });
   };
 
-  // ================= FILTER + SORT =================
   useEffect(() => {
     const timer = setTimeout(() => {
       const result = allWisata.filter((item) => {
