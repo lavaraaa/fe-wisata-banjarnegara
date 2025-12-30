@@ -4,9 +4,6 @@ import CardWisata from '../../components/common/cardComponents/CardWisata';
 import { Icon } from '@iconify/react';
 import Loading from '../../components/common/Loading';
 
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
 const daftarKategori = [
   'Dieng',
   'Wisata Alam',
@@ -39,18 +36,21 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [sortTerpilih, setSortTerpilih] = useState('');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
-  // ✅ TAMBAHAN (FLAG SIAP)
-  const [isReady, setIsReady] = useState(false);
-
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const kategoriDariURL = queryParams.get('kategori');
   const searchQuery = queryParams.get('search');
   const sortDariURL = queryParams.get('sort');
+
   const dropdownRef = useRef(null);
   const sortDropdownRef = useRef(null);
   const skipURLSyncRef = useRef(false);
+
+  // 🔥 FLAG KHUSUS: hanya aktif saat datang dari URL (Home / refresh)
+  const isInitialURLLoad = useRef(
+    Boolean(searchQuery || kategoriDariURL || sortDariURL)
+  );
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -76,9 +76,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     }
   };
 
-  // =========================
-  // URL → STATE SYNC
-  // =========================
+  // URL → state sync (TIDAK DIUBAH)
   useEffect(() => {
     if (skipURLSyncRef.current) {
       skipURLSyncRef.current = false;
@@ -101,16 +99,10 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       }
     }
 
-    if (sortDariURL) {
-      if (draftSort !== sortDariURL) {
-        setDraftSort(sortDariURL);
-        setSortTerpilih(sortDariURL);
-      }
+    if (sortDariURL && draftSort !== sortDariURL) {
+      setDraftSort(sortDariURL);
+      setSortTerpilih(sortDariURL);
     }
-
-    // ✅ TANDAI SIAP SETELAH URL DISERAP
-    setIsReady(true);
-
   }, [searchQuery, kategoriDariURL, sortDariURL]);
 
   useEffect(() => {
@@ -161,12 +153,8 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
     navigate(`?${params.toString()}`, { replace: true });
   };
 
-  // =========================
-  // FILTER & SORT
-  // =========================
+  // FILTER & SORT (LOGIKA ASLI — TIDAK DIUBAH)
   useEffect(() => {
-    if (!isReady) return; // ⛔ STOP FILTER DI RENDER PERTAMA
-
     const timer = setTimeout(() => {
       const result = allWisata.filter((item) => {
         const cocokSearch = item.judul?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -205,15 +193,23 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
       setFilteredWisata(result);
       setLoading(false);
+
+      // 🔥 MATIKAN FLAG SETELAH FILTER PERTAMA
+      isInitialURLLoad.current = false;
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih, isReady]);
+  }, [allWisata, searchTerm, kategoriTerpilih, sortTerpilih]);
 
-  if (loading) {
+  // 🔥 GUARD RENDER (INI KUNCI ANTI KEDIP)
+  if (
+    loading ||
+    (isInitialURLLoad.current &&
+      ((searchQuery && searchTerm === '') ||
+       (kategoriDariURL && kategoriTerpilih.length === 0)))
+  ) {
     return <Loading />;
   }
-
   return (
     <main className="mx-auto my-4 px-4" style={{ maxWidth: '1150px' }}>
       <div className="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 mb-3" style={{ maxWidth: '1100px', margin: '0 auto', }}>
