@@ -20,6 +20,7 @@ const ButtonChatbot = () => {
   }, []);
 
   useEffect(() => {
+    // Hilangkan teks setelah 3 detik
     const timer = setTimeout(() => setShowText(false), 3000);
     return () => clearTimeout(timer);
   }, []);
@@ -32,7 +33,7 @@ const ButtonChatbot = () => {
           position: 'fixed',
           bottom: '70px',
           right: buttonRight,
-          backgroundColor: '#015E78', // tetap biru tombol
+          backgroundColor: '#015E78',
           color: '#fff',
           fontSize: '15px',
           padding: showText ? '6px 14px' : '10px',
@@ -48,26 +49,15 @@ const ButtonChatbot = () => {
           transition: 'all 0.3s ease',
         }}
       >
-        {/* Teks kiri dengan background berbeda */}
-        {showText && (
-          <span
-            style={{
-              fontWeight: 500,
-              backgroundColor: 'rgba(255,255,255,0.2)', // ganti sesuai selera
-              padding: '2px 6px',
-              borderRadius: '12px',
-            }}
-          >
-            Tanya Kami
-          </span>
-        )}
+        {/* Teks kiri */}
+        {showText && <span style={{ fontWeight: 500 }}>Tanya Kami</span>}
 
         {/* Icon kanan */}
         <i
           className="bi bi-chat-text"
           style={{
             marginLeft: showText ? '8px' : '0',
-            fontSize: '20px',
+            fontSize: '20px', // ukuran sesuai tombol
           }}
         ></i>
       </button>

@@ -9,10 +9,10 @@ const Chatbot = ({ buttonRight }) => {
     <div
       style={{
         position: 'fixed',
-        bottom: '105px',
+        bottom: '125px',
         right: buttonRight,
         width: '320px',
-        height: '560px',
+        height: '540px',
         backgroundColor: '#fff',
         borderRadius: '12px',
         boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
