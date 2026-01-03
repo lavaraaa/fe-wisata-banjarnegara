@@ -12,7 +12,7 @@ const Chatbot = ({ buttonRight }) => {
         bottom: '105px',
         right: buttonRight,
         width: '320px',
-        height: '580px',
+        height: '560px',
         backgroundColor: '#fff',
         borderRadius: '12px',
         boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
