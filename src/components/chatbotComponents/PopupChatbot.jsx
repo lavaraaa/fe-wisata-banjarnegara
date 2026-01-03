@@ -91,7 +91,7 @@ const PopupChatbot = () => {
       }, 25);
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { text: 'Koneksi gagal', user: false }]);
+      setMessages(prev => [...prev, { text: 'Mohon maaf, saat ini layanan chatbot sedang tidak tersedia', user: false }]);
       setIsTyping(false);
     }
   };
