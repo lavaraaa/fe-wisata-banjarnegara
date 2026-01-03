@@ -108,16 +108,14 @@ useEffect(() => {
            <WisataLainnyaSidebar/>
           </div>
 
-          <div className="d-lg-none row d-flex flex-wrap justify-content-start">
-            <p className=" mb-3" 
-            style={{ paddingTop: '10px',
-              fontSize:'clamp(17px, 2.5vw, 20px',
-              fontWeight:500
-             }}>
-              Wisata Lainnya
-            </p>
-           <WisataLainnya/>
-          </div>
+          <div className="d-lg-none d-flex flex-wrap justify-content-start">
+  <p className="mb-3" 
+     style={{ paddingTop: '10px', fontSize:'clamp(17px, 2.5vw, 20px)', fontWeight:500 }}>
+    Wisata Lainnya
+  </p>
+  <WisataLainnya/>
+</div>
+
         </div>
       </div>
 
