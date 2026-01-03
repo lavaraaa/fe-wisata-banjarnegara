@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Chatbot from'../../pages/Chatbot/Chatbot';
+import Chatbot from '../../pages/Chatbot/Chatbot';
 
 const ButtonChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,6 @@ const ButtonChatbot = () => {
       const screenWidth = window.innerWidth;
       const contentWidth = 1200;
       const marginSide = (screenWidth - contentWidth) / 2;
-
       setButtonRight(screenWidth <= contentWidth ? '16px' : `${marginSide + 20}px`);
     };
 
@@ -32,18 +31,40 @@ const ButtonChatbot = () => {
           fontSize: '15px',
           padding: '6px 14px',
           border: 'none',
-          borderRadius: '40px',
+          borderRadius: '12px',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
           zIndex: 1099,
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between', // icon di kanan
           cursor: 'pointer',
+          minWidth: '130px',
         }}
       >
-        <i className="bi bi-chat-dots-fill" style={{ marginRight: '8px' }}></i>
-        Chat dengan Kami
+        {/* Teks kiri */}
+        <span>Tanya Kami</span>
+
+        {/* Icon kanan dengan animasi naik turun */}
+        <i
+          className="bi bi-chat-dots-fill"
+          style={{
+            marginLeft: '8px',
+            animation: 'bounce 1.5s infinite',
+          }}
+        ></i>
       </button>
+
       {isOpen && <Chatbot onClose={() => setIsOpen(false)} buttonRight={buttonRight} />}
+
+      {/* Animasi bounce untuk icon */}
+      <style>
+        {`
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+          }
+        `}
+      </style>
     </>
   );
 };
