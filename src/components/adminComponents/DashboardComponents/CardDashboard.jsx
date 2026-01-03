@@ -139,7 +139,7 @@ setJumlahEvent(eventCount);
         </div>
       </div>
 
-        {/* BOX 3 - Total Acara */}
+        {/* BOX 3 - Total Acara
       <div className="col-md-4 col-sm-6 col-12">
         <div style={{ ...boxStyle, backgroundColor: "#b80000ff" }}>
           <div>
@@ -149,11 +149,11 @@ setJumlahEvent(eventCount);
           <div style={iconStyle}>
             <i className="fas fa-shopping-bag"></i>
           </div>
-          {/* <div style={footerStyle} onClick={() => goToPage("/daftarwisata")}>
+          <div style={footerStyle} onClick={() => goToPage("/daftarwisata")}>
             More info <i className="fas fa-arrow-circle-right"></i>
-          </div> */}
+          </div>
         </div>
-      </div>
+      </div> */}
       {/* BOX 4 - Komentar */}
       <div className="col-md-4 col-sm-6 col-12">
         <div style={{ ...boxStyle, backgroundColor: "#008db1ff" }}>

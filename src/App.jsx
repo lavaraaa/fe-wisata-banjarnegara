@@ -17,7 +17,7 @@ import DaftarUser from "./pages/admin/DaftarUser";
 import LaporanKomentar from "./pages/admin/LaporanKomentar";
 import DaftarUlasan from "./pages/admin/DaftarUlasan";
 import DaftarKomentar from "./pages/admin/DaftarKomentar";
-import DaftarEvent from "./pages/admin/DaftarEvent";
+// import DaftarEvent from "./pages/admin/DaftarEvent";
 
 //  USER
 import UserNavbar from "./components/layouts/userLayouts/UserNavbar";
@@ -44,7 +44,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="kelolawisata" element={<KelolaWisata />} />
             <Route path="tambahwisata" element={<ModalTambahWisata />} />
-            <Route path="daftarevent" element={<DaftarEvent />} />
+            {/* <Route path="daftarevent" element={<DaftarEvent />} /> */}
             <Route path="editwisata" element={<ModalEditWisata />} />
             <Route path="/wisata/:id" element={<DetailWisata />} />
             <Route path="/daftarwisata" element={<DaftarWisata />} />

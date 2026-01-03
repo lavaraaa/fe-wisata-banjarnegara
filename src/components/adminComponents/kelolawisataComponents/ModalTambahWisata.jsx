@@ -81,7 +81,6 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
     formData.append('fasilitas', JSON.stringify(fasilitas));
     formData.append('harga_tiket', hargaTiket);
     formData.append('link_gmaps', linkGmaps);
-
     formData.append('longitude', longitude);
     formData.append('latitude', latitude);
     formData.append('kode_wilayah', kodewilayah);

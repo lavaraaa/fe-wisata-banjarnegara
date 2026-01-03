@@ -8,7 +8,6 @@ import KomentarModal from '../../components/userComponents/detailwisataComponent
 import GalleryWisata from '../../components/userComponents/detailwisataComponents/InformasiWisata/GalleryWisata';
 import DeskripsiWisata from '../../components/userComponents/detailwisataComponents/InformasiWisata/DeskripsiWisata';
 import ButtonNavigasiLokasi from '../../components/userComponents/detailwisataComponents/fiturComponents/ButtonNavigasiLokasi';
-
 import UlasanPreview from '../../components/userComponents/detailwisataComponents/UlasanComponents/UlasanPreview';
 import UlasanTotal from '../../components/userComponents/detailwisataComponents/InformasiWisata/UlasanTotal';
 import LikeSaveBagikan from '../../components/userComponents/detailwisataComponents/fiturComponents/LikeSaveBagikan';
@@ -16,7 +15,7 @@ import GambarWisata from '../../components/userComponents/detailwisataComponents
 import JudulWisata from '../../components/userComponents/detailwisataComponents/InformasiWisata/JudulWisata';
 import JamTiketNoTelepon from '../../components/userComponents/detailwisataComponents/InformasiWisata/JamTiketNoTelepon';
 import KategoriFasilitasAlamat from '../../components/userComponents/detailwisataComponents/InformasiWisata/KategoriFasilitasAlamat';
-import EventWisata from '../../components/userComponents/detailwisataComponents/InformasiWisata/EventWisata';
+// import EventWisata from '../../components/userComponents/detailwisataComponents/InformasiWisata/EventWisata';
 import { AuthContext } from '../auth/AuthContext';
 import ButtonEditWisata from '../../components/adminComponents/kelolawisataComponents/ButtonEditWisata';
 import WisataLainnya from '../../components/SistemRekomendasi/WisataLainnya';
@@ -93,7 +92,7 @@ useEffect(() => {
               Ditambahkan pada : {formatTanggalLengkap(wisata.created_at)}
             </p>
           </div>
-          <EventWisata/>
+          {/* <EventWisata/> */}
           <JamTiketNoTelepon/>
           <KategoriFasilitasAlamat />
           <DeskripsiWisata />

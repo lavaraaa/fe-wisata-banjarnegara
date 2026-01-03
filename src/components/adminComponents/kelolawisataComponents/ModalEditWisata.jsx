@@ -141,7 +141,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
     formData.append('deskripsi', deskripsi);
    if (gambar) {
     formData.append('gambar', gambar);}
-    formData.append('event', event);
+    // formData.append('event', event);
     formData.append('alamat', alamat);
     formData.append('jam_buka', waktuBuka);
     formData.append('jam_tutup', waktuTutup);
@@ -149,7 +149,6 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
     formData.append('fasilitas', JSON.stringify(fasilitas));
     formData.append('harga_tiket', hargaTiket);
     formData.append('link_gmaps', linkGmaps);
-
     formData.append('latitude', latitude);
     formData.append('longitude', longitude);
     formData.append('kode_wilayah', kodewilayah);
@@ -225,7 +224,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
           <form onSubmit={handleSubmit}>
 
              {/* Informasi/Event */}
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <label htmlFor="event" className="form-label">
                   Informasi / Event (jika ada)
                 </label>
@@ -243,7 +242,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
                   }}
                 />
-              </div>
+              </div> */}
             <div className="modal-body">
               {/* Judul */}
               <div className="mb-3">

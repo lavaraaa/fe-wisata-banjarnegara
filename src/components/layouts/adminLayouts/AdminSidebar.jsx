@@ -16,7 +16,7 @@ const AdminSidebar = () => {
   const menuItems = [
     { label: "Dashboard", path: "/dashboard", icon: "bi bi-house-door-fill" },
     { label: "Kelola Wisata", path: "/kelolawisata", icon: "bi-map-fill" },
-     { label: "Daftar Pengumuman", path: "/daftarevent", icon: "bi-chat-left-text-fill" },
+    //  { label: "Daftar Pengumuman", path: "/daftarevent", icon: "bi-chat-left-text-fill" },
     { label: "Daftar Pengguna", path: "/daftaruser", icon: "bi-people-fill" },
     { label: "Daftar Ulasan", path: "/daftarulasan", icon: "bi bi-chat-left-heart-fill" },
     { label: "Daftar Komentar", path: "/daftarkomentar", icon: "bi-chat-left-text-fill" },
