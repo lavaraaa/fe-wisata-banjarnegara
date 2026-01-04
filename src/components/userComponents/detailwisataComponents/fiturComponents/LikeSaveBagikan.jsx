@@ -81,7 +81,7 @@ const LikeSaveBagikan = ({ setTotalLike, setTotalFavorit }) => {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        showNotif('Link wisata berhasil disalin!');
+        showNotif('link berhasil disalin!');
       })
       .catch(() => {
         showNotif('Gagal menyalin URL', 'error');
