@@ -61,7 +61,7 @@ const UlasanModal = ({ onClose, onUpdate }) => {
       await axios.delete(`/api/admin/rating/${id}`, { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }});
       setUlasan(prev => prev.filter(u=>u.id!==id));
       onUpdate?.();
-      showNotif('✅ Ulasan berhasil dihapus');
+      showNotif('Ulasan berhasil dihapus!');
       setShowDeleteModal(false);
     } catch(err){ showNotif('Gagal menghapus ulasan','error'); }
   };

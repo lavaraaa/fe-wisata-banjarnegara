@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import defaultProfileImage from '../../assets/profil.png';
 import LoadingInternal from '../../components/common/LoadingInternal';
+import { useNotifikasi } from '../../../common/Notifikasi';
 
 const DaftarUlasan = () => {
   const [ulasan, setUlasan] = useState([]);
@@ -12,6 +13,7 @@ const DaftarUlasan = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const token = localStorage.getItem('token');
+  const { showNotif } = useNotifikasi();
 
   useEffect(() => {
     fetchUlasan();
@@ -38,10 +40,10 @@ const DaftarUlasan = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUlasan();
-      setMessage('Ulasan berhasil dihapus.');
+      showNotif('Ulasan berhasil dihapus!');
     } catch (err) {
       console.error('Gagal menghapus ulasan:', err);
-      setMessage('Gagal menghapus ulasan.');
+      showNotif('Gagal menghapus ulasan!', 'error');
     }
   };
 
