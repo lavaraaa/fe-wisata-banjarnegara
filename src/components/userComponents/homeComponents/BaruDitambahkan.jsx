@@ -11,12 +11,9 @@ const BaruDitambahkan = () => {
         const res = await fetch('/api/wisata');
         const data = await res.json();
         if (!Array.isArray(data)) return;
-
-        // Sort berdasarkan yang baru ditambahkan (created_at) dari terbaru ke terlama
         const sorted = [...data]
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-          .slice(0, 4); // ambil 4 teratas
-
+          .slice(0, 8);
         setWisataBaru(sorted);
       } catch (err) {
         console.error('Gagal fetch wisata:', err);
