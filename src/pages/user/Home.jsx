@@ -20,7 +20,7 @@ return () => window.removeEventListener('resize', handleResize);
 }, []);
 
 useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 300); // 1 detik
+    const timer = setTimeout(() => setLoading(false), 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -44,11 +44,13 @@ return (
   <h5 className="text-left mb-3">
     <b style={{fontSize:'clamp(16px, 2.5vw, 20px)'}}> Berdasarkan Kategori</b>
   </h5>
+
   <CategoryCard />
+
 </section>
-        
+
 <BaruDitambahkan/>
-  
+
 <div className="text-center mb-3 mt-2"><TombolWisataLainnya/> </div>
 
 </main>
