@@ -5,7 +5,7 @@ import CategoryCard from '../../components/common/cardComponents/CategoryCard';
 import BannerCarrousel from '../../components/userComponents/homeComponents/BannerCarrousel';
 import SearchBar from '../../components/userComponents/homeComponents/SearchBar';
 import TombolWisataLainnya from '../../components/userComponents/homeComponents/TombolWisataLainnya';
-import RatingTertinggi from '../../components/userComponents/homeComponents/RatingTertinggi';
+import BaruDitambahkan from '../../components/userComponents/homeComponents/BaruDitambahkan';
 import LikeTerbanyak from '../../components/userComponents/homeComponents/LikeTerbanyak';
 import SistemRekomendasi from '../../components/SistemRekomendasi/SistemRekomendasi';
 import FavoritTerbanyak from '../../components/userComponents/homeComponents/FavoritTerbanyak';
@@ -49,9 +49,7 @@ return (
   <CategoryCard />
 </section>
         
-<RatingTertinggi/>
-<LikeTerbanyak/>
-<FavoritTerbanyak/>
+<BaruDitambahkan/>
   
 <div className="text-center mb-3 mt-2"><TombolWisataLainnya/> </div>
 
