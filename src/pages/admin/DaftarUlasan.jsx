@@ -1,4 +1,3 @@
-// DaftarUlasan.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import defaultProfileImage from '../../assets/profil.png';
@@ -15,17 +14,12 @@ const DaftarUlasan = () => {
   const token = localStorage.getItem('token');
   const { showNotif } = useNotifikasi();
 
-  useEffect(() => {
-    fetchUlasan();
-  }, []);
-
   const fetchUlasan = async () => {
     try {
       const res = await axios.get('/api/admin/rating', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUlasan(res.data);
-      setMessage('');
     } catch (err) {
       console.error('Gagal memuat ulasan:', err);
       setMessage('Gagal memuat ulasan.');
@@ -34,13 +28,17 @@ const DaftarUlasan = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUlasan();
+  }, []);
+
   const handleHapus = async (ulasanId) => {
     try {
       await axios.delete(`/api/admin/rating/${ulasanId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUlasan();
-     showNotif('Ulasan berhasil dihapus!');
+      showNotif('Ulasan berhasil dihapus!');
     } catch (err) {
       showNotif('Gagal menghapus ulasan!', 'error');
     }
