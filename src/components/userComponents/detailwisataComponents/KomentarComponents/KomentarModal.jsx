@@ -204,9 +204,9 @@ const handleLaporkanKomentar = async () => {
     resetLaporModal();
 
     if (res.data.message?.includes('sudah')) {
-      showNotif('🚫 ' + res.data.message, 'info');
+      showNotif(res.data.message, 'info');
     } else {
-      showNotif('✅ ' + res.data.message, 'success');
+      showNotif(res.data.message, 'success');
     }
 
   } catch (err) {
@@ -215,7 +215,7 @@ const handleLaporkanKomentar = async () => {
     if (msg.includes('sudah')) {
       showNotif(msg, 'info');
     } else {
-      showNotif('❌ ' + msg, 'error');
+      showNotif( msg, 'error');
     }
   }
 };
