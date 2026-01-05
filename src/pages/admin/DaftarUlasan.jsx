@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import defaultProfileImage from '../../assets/profil.png';
 import LoadingInternal from '../../components/common/LoadingInternal';
-import { useNotifikasi } from '../../../common/Notifikasi';
+import { useNotifikasi } from '../../components/common/Notifikasi';
 
 const DaftarUlasan = () => {
   const [ulasan, setUlasan] = useState([]);
@@ -42,7 +42,6 @@ const DaftarUlasan = () => {
       fetchUlasan();
       showNotif('Ulasan berhasil dihapus!');
     } catch (err) {
-      console.error('Gagal menghapus ulasan:', err);
       showNotif('Gagal menghapus ulasan!', 'error');
     }
   };
