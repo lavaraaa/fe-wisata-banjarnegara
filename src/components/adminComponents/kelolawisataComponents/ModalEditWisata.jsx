@@ -23,7 +23,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
   const [galeriFiles, setGaleriFiles] = useState([]);
   const [galeriLama, setGaleriLama] = useState([]);
-  const [event, setEvent] = useState('');
+  // const [event, setEvent] = useState('');
 
   const { showNotif } = useNotifikasi();
   const modalRef = useRef(null);
@@ -57,7 +57,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
       setKodewilayah(dataWisata.kode_wilayah || '');
 
       setGambarLama(dataWisata.gambar || '');
-      setEvent(dataWisata.event || '');
+      // setEvent(dataWisata.event || '');
 
       try {
         setFasilitas(dataWisata.fasilitas ? JSON.parse(dataWisata.fasilitas) : []);
