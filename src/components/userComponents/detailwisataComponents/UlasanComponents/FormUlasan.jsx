@@ -74,7 +74,9 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
           >★</span>
         ))}
       </div>
-
+        <div>
+          <span>(Maks 1MB/ gambar)</span>
+        </div>
       {/* Input file hidden */}
       <input
         type="file"
