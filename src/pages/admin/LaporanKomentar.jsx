@@ -137,25 +137,30 @@ const LaporanKomentar = () => {
                 {filtered.length > 0 ? (
                   filtered.map((item) => (
                     <tr key={item.laporan_id}>
-                      <td style={td}>
-                        <img
-                          src={item.foto_komentar || defaultProfileImage}
-                          alt="profil"
-                          style={{
-                            width: '48px',
-                            height: '48px',
-                            objectFit: 'cover',
-                            borderRadius: '50%',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-                          }}
-                        />
-                        <div>
-            <strong>{item.pemilik_username}</strong>
-            <br />
-            <span className="text-sm text-gray-600">
-              {item.pemilik_email}</span>
-          </div>
-                      </td>
+                    <td style={td}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+    <img
+      src={item.foto_komentar || defaultProfileImage}
+      alt="profil"
+      style={{
+        width: '48px',
+        height: '48px',
+        objectFit: 'cover',
+        borderRadius: '50%',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+        flexShrink: 0,
+      }}
+    />
+    <div style={{ textAlign: 'left' }}>
+      <strong style={{ display: 'block' }}>
+        {item.pemilik_username}
+      </strong>
+      <span style={{ fontSize: '13px', color: '#666' }}>
+        {item.pemilik_email}
+      </span>
+    </div>
+  </div>
+</td>
                       <td style={td}>{item.isi}</td>
                       <td style={td}>
                         {item.judul_wisata}
