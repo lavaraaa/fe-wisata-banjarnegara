@@ -184,12 +184,12 @@ const handleLaporkanKomentar = async () => {
     : alasanLapor.join(', ');
 
   if (alasanLapor.includes('Lainnya') && !alasanLainnya.trim()) {
-    showNotif('Silakan isi alasan lainnya.', 'error');
+    showNotif('Silakan isi alasan lainnya!', 'error');
     return;
   }
 
   if (alasanLapor.length === 0) {
-    showNotif('Pilih setidaknya satu alasan pelaporan.', 'error');
+    showNotif('Pilih setidaknya satu alasan!', 'error');
     return;
   }
 
