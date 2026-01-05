@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNotifikasi } from '../../common/Notifikasi';
+import CompressImage from '../../utils/CompressImage';
 
 function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
   const [judul, setJudul] = useState('');
@@ -103,11 +104,55 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
     }
   };
 
-  const handleGaleriChange = (e) => {
-    const selected = Array.from(e.target.files);
-    setGaleriFiles((prev) => [...prev, ...selected]);
-    e.target.value = '';
-  };
+  const handleGambarChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    const compressed = await CompressImage(file);
+
+    console.log(
+      'Gambar utama:',
+      (file.size / 1024).toFixed(1),
+      'KB →',
+      (compressed.size / 1024).toFixed(1),
+      'KB'
+    );
+
+    setGambar(compressed);
+  } catch (err) {
+    showNotif('Gagal memproses gambar', 'error');
+  }
+};
+
+  const handleGaleriChange = async (e) => {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+
+  try {
+    const compressedFiles = await Promise.all(
+      files.map(async (file) => {
+        const compressed = await CompressImage(file);
+        console.log(
+          'Galeri:',
+          file.name,
+          (file.size / 1024).toFixed(1),
+          'KB →',
+          (compressed.size / 1024).toFixed(1),
+          'KB'
+        );
+        return compressed;
+      })
+    );
+
+    setGaleriFiles((prev) => [...prev, ...compressedFiles]);
+  } catch (err) {
+    showNotif('Gagal memproses galeri', 'error');
+  }
+
+  e.target.value = '';
+};
+
 
   const handleHapusGaleriLama = (file) => {
     setGaleriLama(galeriLama.filter((f) => f !== file));
@@ -353,7 +398,8 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                   type="file"
                   id="gambar"
                   className="form-control"
-                  onChange={(e) => setGambar(e.target.files[0])}
+                  accept="image/*"
+                  onChange={handleGambarChange}
                   style={{
                     borderRadius: '8px',
                     border: '1px solid #ddd',
