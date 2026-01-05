@@ -17,9 +17,7 @@ const daftarKategori = [
 
 const sortOptions = [
   'Baru Ditambahkan',
-  'Rating Tertinggi',
-  'Like Tertinggi',
-  'Simpan Favorit Tertinggi'
+  'Wisata Terbaik'
 ];
 
 const DaftarWisata = ({ data = [], onActionSuccess }) => {
@@ -62,11 +60,8 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       setLoading(true);
       const res = await fetch('/api/wisata');
       const wisataData = await res.json();
-
       setWisataList(wisataData);
       setAllWisata(wisataData);
-      // ❌ DIHAPUS: setFilteredWisata(wisataData)
-
     } catch (err) {
       console.error('Gagal memuat data wisata:', err);
       setLoading(false);
@@ -177,17 +172,18 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
         case 'Baru Ditambahkan':
           result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           break;
-        case 'Rating Tertinggi':
-          result.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
-          break;
-        case 'Like Tertinggi':
-          result.sort((a, b) => (b.total_likes || 0) - (a.total_likes || 0));
-          break;
-        case 'Simpan Favorit Tertinggi':
-          result.sort((a, b) => (b.total_favorit || 0) - (a.total_favorit || 0));
-          break;
-        default:
-          break;
+        case 'Wisata Terbaik':
+         result.sort((a, b) => {
+          const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0);
+          if (ratingDiff !== 0) return ratingDiff;
+
+          const likeDiff = (b.total_likes || 0) - (a.total_likes || 0);
+          if (likeDiff !== 0) return likeDiff;
+
+        return (b.total_favorit || 0) - (a.total_favorit || 0);
+      });
+      break;
+
       }
 
       setFilteredWisata(result);
