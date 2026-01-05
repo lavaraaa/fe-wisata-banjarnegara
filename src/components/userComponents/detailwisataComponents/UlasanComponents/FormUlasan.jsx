@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNotifikasi } from '../../../common/Notifikasi';
 
+const MAX_IMAGE_SIZE = 1024 * 1024; // 1MB
+
 const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
   const { showNotif } = useNotifikasi();
 
@@ -34,10 +36,13 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
     form.append('rating', rating);
     form.append('review', review);
     form.append('wisata_id', wisataId);
+
     preview.forEach(p => form.append('keepImages', p));
     images.forEach(i => form.append('images', i));
 
-    const config = { headers: { Authorization: 'Bearer ' + token } };
+    const config = {
+      headers: { Authorization: 'Bearer ' + token }
+    };
 
     try {
       if (isEditing && editingData?.id) {
@@ -47,6 +52,7 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
         await axios.post(`/api/user/rating`, form, config);
         showNotif('Ulasan ditambahkan', 'success');
       }
+
       onSuccess();
       setRating(0);
       setReview('');
@@ -54,7 +60,10 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
       setPreview([]);
       setIsEditing(false);
     } catch (err) {
-      showNotif(err?.response?.data?.message || 'Gagal mengirim ulasan', 'error');
+      showNotif(
+        err?.response?.data?.message || 'Gagal mengirim ulasan',
+        'error'
+      );
     }
   };
 
@@ -67,17 +76,21 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
       {/* Rating */}
       <div>
         {[1,2,3,4,5].map(i => (
-          <span 
-            key={i} 
+          <span
+            key={i}
             onClick={() => setRating(i)}
-            style={{ cursor:'pointer', color: rating >= i ? 'orange' : '#ccc', fontSize:24 }}
-          >★</span>
+            style={{
+              cursor: 'pointer',
+              color: rating >= i ? 'orange' : '#ccc',
+              fontSize: 24
+            }}
+          >
+            ★
+          </span>
         ))}
       </div>
-        <div>
-          <span>(Maks 1MB/ gambar)</span>
-        </div>
-      {/* Input file hidden */}
+
+      {/* Input file */}
       <input
         type="file"
         accept="image/*"
@@ -86,70 +99,141 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
         style={{ display: 'none' }}
         onChange={(e) => {
           const selected = Array.from(e.target.files);
+          const validFiles = [];
+
+          for (const file of selected) {
+            if (file.size > MAX_IMAGE_SIZE) {
+              showNotif('Ukuran gambar maksimal 1MB', 'error');
+            } else {
+              validFiles.push(file);
+            }
+          }
+
+          if (validFiles.length === 0) {
+            e.target.value = '';
+            return;
+          }
+
           setImages(prev => {
-            const combined = [...prev, ...selected];
+            const combined = [...prev, ...validFiles];
             return combined.slice(0, 3 - preview.length);
           });
+
           e.target.value = '';
         }}
       />
 
-      {/* Preview + tambah */}
-      <div style={{ display:'flex', gap:10, marginTop:10 }}>
+      {/* Preview */}
+      <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
         {[0,1,2].map(idx => {
           const total = [...preview, ...images];
           const file = total[idx];
+
           return file ? (
-            <div key={idx} style={{ width:80, height:80, borderRadius:8, overflow:'hidden', position:'relative' }}>
-             <img
-  src={
-    typeof file === 'string'
-      ? `https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${file}`
-      : URL.createObjectURL(file)
-  }
-  style={{ width:'100%', height:'100%', objectFit:'cover' }}
-/>
+            <div
+              key={idx}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 8,
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+            >
+              <img
+                src={
+                  typeof file === 'string'
+                    ? `https://ksjglnabyjehcodgvssp.supabase.co/storage/v1/object/public/images/ulasan/${file}`
+                    : URL.createObjectURL(file)
+                }
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
 
               <span
                 onClick={() => {
-                  if(typeof file === 'string') setPreview(prev => prev.filter(p=>p!==file));
-                  else setImages(prev => prev.filter((_,i)=>i!==idx - preview.length));
+                  if (typeof file === 'string') {
+                    setPreview(prev => prev.filter(p => p !== file));
+                  } else {
+                    setImages(prev =>
+                      prev.filter((_, i) => i !== idx - preview.length)
+                    );
+                  }
                 }}
-                style={{ position:'absolute', top:2, right:2, cursor:'pointer', color:'white', backgroundColor:'rgba(0,0,0,0.5)', borderRadius:'50%', padding:'2px 4px' }}
+                style={{
+                  position: 'absolute',
+                  top: 2,
+                  right: 2,
+                  cursor: 'pointer',
+                  color: 'white',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  borderRadius: '50%',
+                  padding: '2px 4px'
+                }}
               >
                 ✕
               </span>
             </div>
           ) : (
-            <div key={idx} onClick={()=>inputFileRef.current.click()} style={{ width:80, height:80, border:'2px dashed #aaa', borderRadius:8, display:'flex', justifyContent:'center', alignItems:'center', cursor:'pointer', color:'#777' }}>
+            <div
+              key={idx}
+              onClick={() => inputFileRef.current.click()}
+              style={{
+                width: 80,
+                height: 80,
+                border: '2px dashed #aaa',
+                borderRadius: 8,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer',
+                color: '#777'
+              }}
+            >
               +
             </div>
-          )
+          );
         })}
       </div>
 
-      {/* Textarea + tombol */}
-      <div style={{ display:'flex', alignItems:'flex-end', marginTop:10 }}>
+      {/* Review */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', marginTop: 10 }}>
         <textarea
-        className="flex-1 border rounded px-2 py-1 text-sm"
+          className="flex-1 border rounded px-2 py-1 text-sm"
           placeholder="Tulis ulasan (opsional)"
           value={review}
           rows={2}
           onChange={e => setReview(e.target.value)}
-          style={{ maxWidth:260, flexGrow:1, marginRight:10 }}
+          style={{ maxWidth: 260, flexGrow: 1, marginRight: 10 }}
         />
+
         {!isEditing && (
-          <button  className="ms-3 px-3 py-1 rounded"
-          style={{ color:'#fff', backgroundColor:'#015E78' }} onClick={handleSubmit}>Kirim</button>
+          <button
+            className="ms-3 px-3 py-1 rounded"
+            style={{ color: '#fff', backgroundColor: '#015E78' }}
+            onClick={handleSubmit}
+          >
+            Kirim
+          </button>
         )}
       </div>
 
       {isEditing && (
-        <div style={{ marginTop:10, display:'flex', gap:10, marginLeft:70 }}>
-          <button 
-           className="ms-3 px-3 py-1 rounded"
-          onClick={() => { setIsEditing(false); onCancel?.(); }}>Batal</button>
-          <button style={{ color:'#fff', backgroundColor:'#015E78' }} onClick={handleSubmit}>Perbarui Ulasan</button>
+        <div style={{ marginTop: 10, display: 'flex', gap: 10, marginLeft: 70 }}>
+          <button
+            className="ms-3 px-3 py-1 rounded"
+            onClick={() => {
+              setIsEditing(false);
+              onCancel?.();
+            }}
+          >
+            Batal
+          </button>
+          <button
+            style={{ color: '#fff', backgroundColor: '#015E78' }}
+            onClick={handleSubmit}
+          >
+            Perbarui Ulasan
+          </button>
         </div>
       )}
     </div>
