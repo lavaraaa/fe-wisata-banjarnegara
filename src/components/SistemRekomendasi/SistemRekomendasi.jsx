@@ -26,7 +26,7 @@ const SistemRekomendasi = () => {
             ? `/api/rekomendasi/cbf/${user.id}`
             : `/api/rekomendasi/cf/${user.id}`;
         } else {
-          url = '/api/rekomendasi/hybrid/0';
+          url = `/api/rekomendasi/cf/${user.id}`;
         }
 
         const res = await axios.get(url, { headers });
