@@ -40,7 +40,7 @@ const DaftarUlasan = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUlasan();
-      showNotif('Ulasan berhasil dihapus!');
+     showNotif('Ulasan berhasil dihapus!');
     } catch (err) {
       showNotif('Gagal menghapus ulasan!', 'error');
     }
