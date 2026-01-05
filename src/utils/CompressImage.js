@@ -1,15 +1,23 @@
 const CompressImage = (
   file,
   {
-    minSizeKB = 170,
-    maxSizeKB = 200,
+    minTargetKB = 170,
+    maxTargetKB = 200,
     maxWidth = 1024,
     mimeType = 'image/jpeg',
   } = {}
 ) => {
   return new Promise((resolve, reject) => {
-    // ✅ kalau sudah kecil, tidak usah diapa-apain
-    if (file.size / 1024 <= maxSizeKB) {
+    const sizeKB = file.size / 1024;
+
+    // ✅ sudah ideal → BIARIN
+    if (sizeKB >= minTargetKB && sizeKB <= maxTargetKB) {
+      resolve(file);
+      return;
+    }
+
+    // ✅ kecil → BIARIN
+    if (sizeKB < maxTargetKB) {
       resolve(file);
       return;
     }
@@ -23,7 +31,6 @@ const CompressImage = (
       img.onload = async () => {
         let { width, height } = img;
 
-        // resize kalau terlalu besar
         if (width > maxWidth) {
           height = Math.round((height * maxWidth) / width);
           width = maxWidth;
@@ -37,44 +44,43 @@ const CompressImage = (
         ctx.drawImage(img, 0, 0, width, height);
 
         let quality = 0.9;
-        let blob = null;
         let bestBlob = null;
 
-        while (quality >= 0.3) {
-          blob = await new Promise((res) =>
+        while (quality >= 0.25) {
+          const blob = await new Promise((res) =>
             canvas.toBlob(res, mimeType, quality)
           );
 
-          const sizeKB = blob.size / 1024;
+          const kb = blob.size / 1024;
 
-          // 🎯 masuk range ideal
-          if (sizeKB >= minSizeKB && sizeKB <= maxSizeKB) {
+          // 🎯 ideal
+          if (kb >= minTargetKB && kb <= maxTargetKB) {
             bestBlob = blob;
             break;
           }
 
-          // masih kegedean → turunin quality
-          if (sizeKB > maxSizeKB) {
+          // masih kegedean → turunin kualitas
+          if (kb > maxTargetKB) {
+            bestBlob = blob;
             quality -= 0.05;
-          } 
-          // sudah kekecilan → pakai terakhir yang paling mendekati
-          else {
-            bestBlob = blob;
-            break;
+            continue;
           }
+
+          // sudah kekecilan → STOP, pakai terakhir yang paling dekat
+          break;
         }
 
         if (!bestBlob) {
-          reject('Gagal compress gambar');
+          reject('Compress gagal');
           return;
         }
 
-        const compressedFile = new File([bestBlob], file.name, {
-          type: mimeType,
-          lastModified: Date.now(),
-        });
-
-        resolve(compressedFile);
+        resolve(
+          new File([bestBlob], file.name, {
+            type: mimeType,
+            lastModified: Date.now(),
+          })
+        );
       };
 
       img.onerror = reject;
