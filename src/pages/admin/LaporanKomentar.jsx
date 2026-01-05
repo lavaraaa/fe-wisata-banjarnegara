@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import defaultProfileImage from '../../assets/profil.png';
 import { useNavigate } from 'react-router-dom';
+import { useNotifikasi } from '../../components/common/Notifikasi';
 
 const LaporanKomentar = () => {
   const [laporan, setLaporan] = useState([]);
@@ -13,6 +14,7 @@ const LaporanKomentar = () => {
   const [selectedId, setSelectedId] = useState(null);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const { showNotif } = useNotifikasi();
 
   const fetchLaporan = async () => {
     try {
@@ -38,8 +40,9 @@ const LaporanKomentar = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchLaporan();
+      showNotif('Laporan berhasil dihapus', 'success');
     } catch (err) {
-      setMessage('Gagal menghapus laporan.');
+      showNotif('Gagal menghapus laporan', 'error');
     }
   };
 
@@ -49,13 +52,13 @@ const LaporanKomentar = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchLaporan();
+      showNotif('Komentar berhasil dihapus', 'success');
     } catch (err) {
-      setMessage('Gagal menghapus komentar.');
+      showNotif('Gagal menghapus komentar', 'error');
     }
   };
 
   const handleConfirm = async () => {
-  try {
     if (modalType === 'laporan') {
       await hapusLaporan(selectedId);
     } else if (modalType === 'komentar') {
@@ -63,10 +66,7 @@ const LaporanKomentar = () => {
     }
     setShowModal(false);
     setSelectedId(null);
-  } catch (err) {
-    console.error('Gagal:', err);
-  }
-};
+  };
 
   const filtered = laporan.filter((item) =>
     item.pelapor_username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -75,7 +75,7 @@ const LaporanKomentar = () => {
     item.alasan.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.judul_wisata.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
       <div style={{
