@@ -75,7 +75,7 @@ const LaporanKomentar = () => {
     item.alasan.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.judul_wisata.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
       <div style={{
@@ -152,8 +152,8 @@ const LaporanKomentar = () => {
                         <div>
             <strong>{item.pemilik_username}</strong>
             <br />
-            {/* <span className="text-sm text-gray-600">
-              {item.pemilik_email}</span> */}
+            <span className="text-sm text-gray-600">
+              {item.pemilik_email}</span>
           </div>
                       </td>
                       <td style={td}>{item.isi}</td>
