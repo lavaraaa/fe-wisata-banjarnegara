@@ -6,9 +6,7 @@ import BannerCarrousel from '../../components/userComponents/homeComponents/Bann
 import SearchBar from '../../components/userComponents/homeComponents/SearchBar';
 import TombolWisataLainnya from '../../components/userComponents/homeComponents/TombolWisataLainnya';
 import BaruDitambahkan from '../../components/userComponents/homeComponents/BaruDitambahkan';
-import LikeTerbanyak from '../../components/userComponents/homeComponents/LikeTerbanyak';
 import SistemRekomendasi from '../../components/SistemRekomendasi/SistemRekomendasi';
-import FavoritTerbanyak from '../../components/userComponents/homeComponents/FavoritTerbanyak';
 
 const Home = () => {
 const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 992);
