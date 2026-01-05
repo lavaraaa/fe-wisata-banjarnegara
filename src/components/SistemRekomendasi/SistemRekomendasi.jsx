@@ -23,10 +23,10 @@ const SistemRekomendasi = () => {
 
         if (user && user.id) {
           url = hasInteraction
-            ? `/api/rekomendasi/cf/${user.id}`
-            : `/api/rekomendasi/cbf/${user.id}`;
+            ? `/api/rekomendasi/cbf/${user.id}`
+            : `/api/rekomendasi/cf/${user.id}`;
         } else {
-          url = '/api/rekomendasi/cf';
+          url = '/api/rekomendasi/hybrid/0';
         }
 
         const res = await axios.get(url, { headers });
