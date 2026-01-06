@@ -62,7 +62,7 @@ const ButtonEditWisata = ({ fetchDetailDanLainnya }) => {
           right: buttonRight,
           backgroundColor: '#015E78',
           color: '#fff',
-          fontSize: '15px',
+          fontSize: '17px',
           padding: '10px 10px',
           border: 'none',
           borderRadius: '8px',
