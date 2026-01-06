@@ -247,7 +247,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
               {/* Judul */}
               <div className="mb-3">
                 <label htmlFor="judul" className="form-label">
-                  Judul Wisata
+                  Nama Destinasi Wisata
                 </label>
                 <input
                   type="text"
