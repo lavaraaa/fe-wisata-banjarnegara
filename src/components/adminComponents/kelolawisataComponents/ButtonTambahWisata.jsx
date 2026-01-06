@@ -42,7 +42,7 @@ const ButtonTambahWisata = ({ onActionSuccess }) => {
         onClick={() => setShowModal(true)}
       >
         <i className="bi bi-pencil me-1"></i>
-        Tambah wisata baru
+        Tambah Wisata Baru
       </button>
 
       <ModalTambahWisata

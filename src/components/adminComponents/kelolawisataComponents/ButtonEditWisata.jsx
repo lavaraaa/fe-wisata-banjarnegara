@@ -70,8 +70,8 @@ const ButtonEditWisata = ({ fetchDetailDanLainnya }) => {
           zIndex: 1099,
         }}
       >
-        <Icon icon="mdi:pencil" />
-        Edit Wisata
+         <i className="bi bi-pencil me-1"></i>
+        Perbarui Wisata
       </button>
 
       {dataWisata && (
