@@ -297,8 +297,8 @@ const resetLaporModal = () => {
         <div>
           <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
           <div className="mt-2 flex gap-2">
-            <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
+             <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
           </div>
         </div>
 
@@ -439,8 +439,8 @@ const renderBalasan = (komentar, parentKomentar) => {
         <div>
           <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
           <div className="mt-1 flex gap-2">
-            <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
+            <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
           </div>
         </div>
 
