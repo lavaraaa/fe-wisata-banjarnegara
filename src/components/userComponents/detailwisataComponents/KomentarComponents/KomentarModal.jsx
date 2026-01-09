@@ -392,8 +392,7 @@ const renderBalasan = (komentar, parentKomentar) => {
       id={`komentar-${komentar.komentar_id}`}
       // style={{ marginLeft: 40 }}
       ref={(el) => (dropdownRefs.current[komentar.komentar_id] = el)}
-     style={{ overflow: 'visible', position: 'relative', zIndex: 1 }}
->
+    >
       <div className="flex items-start justify-between gap-2 relative">
           <div style={{ marginLeft: 50 }}>
         <div style={{ position: 'relative', paddingRight: '32px', marginBottom: '8px', marginTop: '8px' }}>
@@ -440,8 +439,9 @@ const renderBalasan = (komentar, parentKomentar) => {
         <div>
           <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
           <div className="mt-1 flex gap-2">
-            <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
-            <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
+           
+            <button onClick={simpanEditKomentar} className="bg-blue-600 text-white px-3 py-1 rounded">Simpan</button>
+           <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
           </div>
         </div>
 
