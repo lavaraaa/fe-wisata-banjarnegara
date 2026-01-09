@@ -440,7 +440,7 @@ const renderBalasan = (komentar, parentKomentar) => {
           <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
           <div className="mt-1 flex gap-2">
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
-            <button onClick={simpanEditKomentar} className="bg-blue-600 text-white px-3 py-1 rounded"
+            <button onClick={simpanEditKomentar} className=" text-white px-3 py-1 rounded"
             style={{ backgroundColor: red,
               color: white
              }}
