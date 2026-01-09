@@ -295,7 +295,7 @@ const resetLaporModal = () => {
 
       {editId === komentar.komentar_id ? (
         <div>
-          <textarea rows={3} value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
+          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className="w-full border p-1 rounded mt-2" />
           <div className="mt-2 flex gap-2">
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
              <button onClick={simpanEditKomentar} className="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
@@ -337,7 +337,7 @@ const resetLaporModal = () => {
 
       {replyTo === komentar.komentar_id && (
         <div className="mt-2 ms-5">
-          <textarea className="w-full border rounded p-2" rows={3} value={replyText} onChange={(e) => setReplyText(e.target.value)} />
+          <textarea className="w-full border rounded p-2" rows={1} value={replyText} onChange={(e) => setReplyText(e.target.value)} />
          <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
   
   <button
@@ -392,7 +392,8 @@ const renderBalasan = (komentar, parentKomentar) => {
       id={`komentar-${komentar.komentar_id}`}
       // style={{ marginLeft: 40 }}
       ref={(el) => (dropdownRefs.current[komentar.komentar_id] = el)}
-    >
+     style={{ overflow: 'visible', position: 'relative', zIndex: 1 }}
+>
       <div className="flex items-start justify-between gap-2 relative">
           <div style={{ marginLeft: 50 }}>
         <div style={{ position: 'relative', paddingRight: '32px', marginBottom: '8px', marginTop: '8px' }}>
