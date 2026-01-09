@@ -299,7 +299,7 @@ const resetLaporModal = () => {
           <div className="mt-2 flex gap-2">
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
              <button onClick={simpanEditKomentar} className=" text-white px-3 py-1 rounded"
-              style={{ backgroundColor: '#015E78', color: 'white' }}>Simpan</button>
+              style={{ backgroundColor: '#015E78', color: 'white',  padding: '2px 8px' }}>Simpan</button>
           </div>
         </div>
 
@@ -443,7 +443,7 @@ const renderBalasan = (komentar, parentKomentar) => {
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
             <button onClick={simpanEditKomentar} className=" text-white px-3 py-1 rounded"
             style={{ backgroundColor: '#015E78',
-              color: 'white'
+              color: 'white',  padding: '2px 8px'
              }}
             >Simpan</button>
           </div>
