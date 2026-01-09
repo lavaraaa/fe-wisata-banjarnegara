@@ -441,8 +441,8 @@ const renderBalasan = (komentar, parentKomentar) => {
           <div className="mt-1 flex gap-2">
             <button onClick={() => setEditId(null)} className="bg-gray-200 px-3 py-1 rounded">Batal</button>
             <button onClick={simpanEditKomentar} className=" text-white px-3 py-1 rounded"
-            style={{ backgroundColor: red,
-              color: white
+            style={{ backgroundColor: '#015E78',
+              color: 'white'
              }}
             >Simpan</button>
           </div>
