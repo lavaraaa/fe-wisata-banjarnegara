@@ -59,10 +59,6 @@ const FormUlasan = ({ wisataId, editingData, onCancel, onSuccess }) => {
       ...preview.filter(p => typeof p !== 'string'), // hanya file baru, bukan string URL
       ...images
     ];
-    if (allFiles.length + preview.filter(p => typeof p === 'string').length < 1) {
-      showNotif('Minimal sertakan 1 gambar dalam ulasan', 'error');
-      return;
-    }
 
     const oversized = allFiles.find(f => f.size > MAX_IMAGE_SIZE);
     if (oversized) {
