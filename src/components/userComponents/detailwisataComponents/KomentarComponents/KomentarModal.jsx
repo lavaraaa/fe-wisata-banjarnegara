@@ -251,7 +251,9 @@ const resetLaporModal = () => {
       id={`komentar-${komentar.komentar_id}`}
       ref={(el) => (dropdownRefs.current[komentar.komentar_id] = el)}
     >
-      <div className="flex items-start justify-between gap-2 relative">
+      <div
+  className="flex items-start justify-between gap-2 relative"
+  style={{ overflow: 'visible' }}>
         <div style={{ position: 'relative', paddingRight: '32px'}}>
           <div 
             onClick={() => handleProfileClick(komentar.user_id)}
