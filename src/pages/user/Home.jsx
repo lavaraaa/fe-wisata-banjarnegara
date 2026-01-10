@@ -24,14 +24,12 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }, []);
 
-if (loading) {
-  return <Loading />;}
+if (loading) {return <Loading />;}
 
 return (
 <>
 <BannerCarrousel />
 <SearchBar/>
-
 <main
   className="my-3 mx-auto"
   style={{ width: '100%',maxWidth: '1180px', 
@@ -44,15 +42,12 @@ return (
   <h5 className="text-left mb-3">
     <b style={{fontSize:'clamp(16px, 2.5vw, 20px)'}}> Berdasarkan Kategori</b>
   </h5>
-
   <CategoryCard />
-
 </section>
 
 <BaruDitambahkan/>
 
 <div className="text-center mb-3 mt-2"><TombolWisataLainnya/> </div>
-
 </main>
 </>
 );

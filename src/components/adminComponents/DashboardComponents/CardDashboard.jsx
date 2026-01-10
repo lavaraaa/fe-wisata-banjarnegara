@@ -118,7 +118,7 @@ setJumlahEvent(eventCount);
             <p style={{ margin: 0 }}>Total Wisata</p>
           </div>
           <div style={iconStyle}>
-            <i className="fas fa-shopping-bag"></i>
+            {/* <i className="fas fa-shopping-bag"></i> */}
           </div>
           {/* <div style={footerStyle} onClick={() => goToPage("/daftarwisata")}>
             More info <i className="fas fa-arrow-circle-right"></i>
@@ -134,7 +134,7 @@ setJumlahEvent(eventCount);
             <p style={{ margin: 0 }}>Pengguna</p>
           </div>
           <div style={iconStyle}>
-            <i className="fas fa-user-plus"></i>
+            {/* <i className="fas fa-user-plus"></i> */}
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ setJumlahEvent(eventCount);
             <p style={{ margin: 0 }}>Jumlah Komentar</p>
           </div>
           <div style={iconStyle}>
-            <i className="fas fa-pie-chart"></i>
+            {/* <i className="fas fa-pie-chart"></i> */}
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ setJumlahEvent(eventCount);
             <p style={{ margin: 0 }}>Jumlah Ulasan</p>
           </div>
           <div style={iconStyle}>
-            <i className="fas fa-pie-chart"></i>
+            {/* <i className="fas fa-pie-chart"></i> */}
           </div>
         </div>
       </div>
@@ -190,7 +190,7 @@ setJumlahEvent(eventCount);
             <p style={{ margin: 0 }}>Laporan Komentar</p>
           </div>
           <div style={iconStyle}>
-            <i className="fas fa-pie-chart"></i>
+            {/* <i className="fas fa-pie-chart"></i> */}
           </div>
         </div>
       </div>
