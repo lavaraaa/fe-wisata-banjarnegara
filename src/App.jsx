@@ -13,6 +13,7 @@ import ModalTambahWisata from "./components/adminComponents/kelolawisataComponen
 import ModalEditWisata from "./components/adminComponents/kelolawisataComponents/ModalEditWisata";
 import Dashboard from "./pages/admin/Dashboard";
 import KelolaWisata from "./pages/admin/KelolaWisata";
+import KelolaKategori from "./pages/admin/KelolaKategori";
 import DaftarUser from "./pages/admin/DaftarUser";
 import LaporanKomentar from "./pages/admin/LaporanKomentar";
 import DaftarUlasan from "./pages/admin/DaftarUlasan";
@@ -43,6 +44,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="kelolawisata" element={<KelolaWisata />} />
+            <Route path="kelolakategori" element={<KelolaKategori />} />
             <Route path="tambahwisata" element={<ModalTambahWisata />} />
             {/* <Route path="daftarevent" element={<DaftarEvent />} /> */}
             <Route path="editwisata" element={<ModalEditWisata />} />

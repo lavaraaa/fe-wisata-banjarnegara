@@ -155,7 +155,11 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
 
         let itemKategori = [];
         try {
-          itemKategori = item.kategori ? JSON.parse(item.kategori) : [];
+          if (Array.isArray(item.kategori)) {
+            itemKategori = item.kategori;
+          } else if (typeof item.kategori === 'string') {
+            itemKategori = JSON.parse(item.kategori);
+          }
         } catch {
           itemKategori = [];
         }
@@ -173,16 +177,16 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
           result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           break;
         case 'Wisata Terbaik':
-         result.sort((a, b) => {
-          const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0);
-          if (ratingDiff !== 0) return ratingDiff;
+          result.sort((a, b) => {
+            const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0);
+            if (ratingDiff !== 0) return ratingDiff;
 
-          const likeDiff = (b.total_likes || 0) - (a.total_likes || 0);
-          if (likeDiff !== 0) return likeDiff;
+            const likeDiff = (b.total_likes || 0) - (a.total_likes || 0);
+            if (likeDiff !== 0) return likeDiff;
 
-        return (b.total_favorit || 0) - (a.total_favorit || 0);
-      });
-      break;
+            return (b.total_favorit || 0) - (a.total_favorit || 0);
+          });
+          break;
 
       }
 

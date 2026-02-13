@@ -46,9 +46,16 @@ const KolomDetailWisata = () => {
               className="fw-semibold"
               style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: '#333' }}
             >
-              {wisata.kategori
-                ? JSON.parse(wisata.kategori).join(', ')
-                : '-'}
+              {(() => {
+                try {
+                  const kat = wisata.kategori;
+                  if (Array.isArray(kat)) return kat.join(', ');
+                  if (typeof kat === 'string') return JSON.parse(kat).join(', ');
+                  return '-';
+                } catch {
+                  return '-';
+                }
+              })()}
             </span>
           </div>
         </div>

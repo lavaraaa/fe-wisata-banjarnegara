@@ -10,12 +10,13 @@ const AdminSidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const { logout, user } = useContext(AuthContext);
- const { showNotif } = useNotifikasi();
+  const { showNotif } = useNotifikasi();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
     { label: "Dashboard", path: "/dashboard", icon: "bi bi-house-door-fill" },
     { label: "Kelola Wisata", path: "/kelolawisata", icon: "bi-map-fill" },
+    { label: "Kategori Wisata", path: "/kelolakategori", icon: "bi-bookmark-fill" },
     //  { label: "Daftar Pengumuman", path: "/daftarevent", icon: "bi-chat-left-text-fill" },
     { label: "Daftar Pengguna", path: "/daftaruser", icon: "bi-people-fill" },
     { label: "Daftar Ulasan", path: "/daftarulasan", icon: "bi bi-chat-left-heart-fill" },
@@ -24,22 +25,22 @@ const AdminSidebar = () => {
   ];
 
   const handleLogout = () => {
-  setShowLogoutModal(false); 
-  showNotif('Berhasil keluar dari akun', 'success', 1500);
-  setTimeout(() => {
-    logout();
-    if (window.location.pathname !== '/') {
-      navigate('/');  
-    }
-  }, 800);
-};
+    setShowLogoutModal(false);
+    showNotif('Berhasil keluar dari akun', 'success', 1500);
+    setTimeout(() => {
+      logout();
+      if (window.location.pathname !== '/') {
+        navigate('/');
+      }
+    }, 800);
+  };
 
 
   return (
     <div
       className="text-black d-none d-lg-block"
       style={{
-        backgroundColor:'#015E78',
+        backgroundColor: '#015E78',
         width: "210px",
         height: "100vh",
         position: "fixed",
@@ -50,29 +51,30 @@ const AdminSidebar = () => {
       }}
     >
       <div style={{
-        marginTop:14
+        marginTop: 14
       }}>
-      <button className="brand btn d-none d-lg-flex align-items-center"
-       style={{
-        fontSize:20,
-        
-        marginBottom:15,
-        fontWeight:600,
-        color:'#fff'
-      }}
-       onClick={() => handleNavigate('/dashboard')}
-       >
-                  <img src={logo} alt="Logo" width="45" height="45" className="me-2" />
-                  Portal Admin
-                </button>
-</div>
+        <button className="brand btn d-none d-lg-flex align-items-center"
+          style={{
+            fontSize: 20,
 
-      <h5 style={{marginLeft:8,
-         paddingTop: 10, 
-         borderTop:'1px solid #ccc',
-         color:'#fff'
-         }}>Menu</h5>
-      
+            marginBottom: 15,
+            fontWeight: 600,
+            color: '#fff'
+          }}
+          onClick={() => handleNavigate('/dashboard')}
+        >
+          <img src={logo} alt="Logo" width="45" height="45" className="me-2" />
+          Portal Admin
+        </button>
+      </div>
+
+      <h5 style={{
+        marginLeft: 8,
+        paddingTop: 10,
+        borderTop: '1px solid #ccc',
+        color: '#fff'
+      }}>Menu</h5>
+
       <ul className="nav flex-column">
         {menuItems.map((item) => {
           const isActive = currentPath === item.path;
@@ -114,16 +116,18 @@ const AdminSidebar = () => {
           );
         })}
       </ul>
-    {/* Tombol Logout */}
+      {/* Tombol Logout */}
       <div className="px-4">
         <button
           className="btn btn-danger w-100"
           onClick={() => setShowLogoutModal(true)}>
-          <i className="bi bi-box-arrow-right" 
-          style=
-          {{marginRight: 5,
-           fontSize:20}}>
-           </i>
+          <i className="bi bi-box-arrow-right"
+            style=
+            {{
+              marginRight: 5,
+              fontSize: 20
+            }}>
+          </i>
           Logout
         </button>
       </div>

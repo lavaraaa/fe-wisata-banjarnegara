@@ -28,18 +28,31 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
   const { showNotif } = useNotifikasi();
   const modalRef = useRef(null);
 
-  const daftarKategori = [
-    'Dieng',
-    'Wisata Alam',
-    'Curug/Air Terjun',
-    'Wisata Budaya',
-    'Wisata Rekreasi',
-    'Wisata Kuliner',
-    'Wisata Edukasi',
-    'Waduk',
-    'Desa Wisata',
-    'Wisata Religi',
-  ];
+  const [daftarKategori, setDaftarKategori] = useState([]);
+  const [loadingKategori, setLoadingKategori] = useState(false);
+
+  // Fetch kategori dari API saat modal dibuka
+  useEffect(() => {
+    if (show) {
+      const fetchKategori = async () => {
+        try {
+          setLoadingKategori(true);
+          const token = localStorage.getItem('token');
+          const res = await axios.get('/api/admin/kategori', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = Array.isArray(res.data) ? res.data : [];
+          setDaftarKategori(data.map((k) => k.nama));
+        } catch (err) {
+          console.error('Gagal mengambil data kategori:', err);
+          setDaftarKategori([]);
+        } finally {
+          setLoadingKategori(false);
+        }
+      };
+      fetchKategori();
+    }
+  }, [show]);
 
   useEffect(() => {
     if (show && dataWisata) {
@@ -65,7 +78,14 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
         setFasilitas([]);
       }
       try {
-        setKategoriTerpilih(dataWisata.kategori ? JSON.parse(dataWisata.kategori) : []);
+        const kat = dataWisata.kategori;
+        if (Array.isArray(kat)) {
+          setKategoriTerpilih(kat);
+        } else if (typeof kat === 'string') {
+          setKategoriTerpilih(JSON.parse(kat));
+        } else {
+          setKategoriTerpilih([]);
+        }
       } catch {
         setKategoriTerpilih([]);
       }
@@ -139,8 +159,9 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
     const formData = new FormData();
     formData.append('judul', judul);
     formData.append('deskripsi', deskripsi);
-   if (gambar) {
-    formData.append('gambar', gambar);}
+    if (gambar) {
+      formData.append('gambar', gambar);
+    }
     // formData.append('event', event);
     formData.append('alamat', alamat);
     formData.append('jam_buka', waktuBuka);
@@ -165,7 +186,15 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
       handleClose();
       if (onEditSuccess) onEditSuccess();
     } catch (error) {
-      showNotif('Wisata gagal diperbarui', 'error');
+      const resData = error.response?.data;
+      if (resData?.missing_kategori) {
+        showNotif(
+          `Kategori tidak ditemukan: ${resData.missing_kategori.join(', ')}. Tambahkan kategori terlebih dahulu.`,
+          'error'
+        );
+      } else {
+        showNotif('Wisata gagal diperbarui', 'error');
+      }
     }
   };
 
@@ -223,8 +252,8 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
           </div>
           <form onSubmit={handleSubmit}>
 
-             {/* Informasi/Event */}
-              {/* <div className="mb-3">
+            {/* Informasi/Event */}
+            {/* <div className="mb-3">
                 <label htmlFor="event" className="form-label">
                   Informasi / Event (jika ada)
                 </label>
@@ -265,8 +294,8 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                   }}
                 />
               </div>
-              
-            {/* Alamat */}
+
+              {/* Alamat */}
               <div className="mb-3">
                 <label htmlFor="alamat" className="form-label">
                   Alamat wisata lengkap
@@ -292,22 +321,30 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
               <div className="mb-3">
                 <label className="form-label">Kategori (minimal 1)</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                  {daftarKategori.map((kategori, idx) => (
-                    <div
-                      key={idx}
-                      style={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <input
-                        type="checkbox"
-                        id={`kategori-${idx}`}
-                        value={kategori}
-                        checked={kategoriTerpilih.includes(kategori)}
-                        onChange={handleKategoriChange}
-                        style={{ marginRight: '5px' }}
-                      />
-                      <label htmlFor={`kategori-${idx}`}>{kategori}</label>
-                    </div>
-                  ))}
+                  {loadingKategori ? (
+                    <span className="text-muted" style={{ fontSize: '14px' }}>Memuat kategori...</span>
+                  ) : daftarKategori.length === 0 ? (
+                    <span className="text-danger" style={{ fontSize: '14px' }}>
+                      Belum ada kategori. Silakan tambahkan di menu Kategori Wisata.
+                    </span>
+                  ) : (
+                    daftarKategori.map((kategori, idx) => (
+                      <div
+                        key={idx}
+                        style={{ display: 'flex', alignItems: 'center' }}
+                      >
+                        <input
+                          type="checkbox"
+                          id={`kategori-edit-${idx}`}
+                          value={kategori}
+                          checked={kategoriTerpilih.includes(kategori)}
+                          onChange={handleKategoriChange}
+                          style={{ marginRight: '5px' }}
+                        />
+                        <label htmlFor={`kategori-edit-${idx}`}>{kategori}</label>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -627,7 +664,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                 />
               </div>
 
-               {/* Latitude */}
+              {/* Latitude */}
               <div className="mb-3">
                 <label htmlFor="latitude" className="form-label">
                   Latitude
@@ -649,7 +686,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                 />
               </div>
 
-               {/* Longitude */}
+              {/* Longitude */}
               <div className="mb-3">
                 <label htmlFor="longitude" className="form-label">
                   Longitude
@@ -671,7 +708,7 @@ function ModalEditWisata({ show, handleClose, dataWisata, onEditSuccess }) {
                 />
               </div>
 
-               {/* Link Google Maps */}
+              {/* Link Google Maps */}
               <div className="mb-3">
                 <label htmlFor="kode_wilayah" className="form-label">
                   Kode Wilayah

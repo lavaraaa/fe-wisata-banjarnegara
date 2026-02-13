@@ -14,14 +14,14 @@ const AdminNavbar = ({ isShifted }) => {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext); // ⬅️ pakai AuthContext
 
-   const handleLogout = () => {
-  closeSidebar();
-  setShowDropdown(false);
-  setTimeout(() => {
-    logout();
-    navigate('/');
-  }, 200);
-};
+  const handleLogout = () => {
+    closeSidebar();
+    setShowDropdown(false);
+    setTimeout(() => {
+      logout();
+      navigate('/');
+    }, 200);
+  };
 
   const closeSidebar = () => {
     const sidebar = offcanvasRef.current;
@@ -58,6 +58,7 @@ const AdminNavbar = ({ isShifted }) => {
   const menuItems = [
     { label: "Dashboard", path: "/dashboard", icon: "bi bi-house-door-fill" },
     { label: "Kelola Wisata", path: "/kelolawisata", icon: "bi-map-fill" },
+    { label: "Kategori Wisata", path: "/kelolakategori", icon: "bi-bookmark-fill" },
     //  { label: "Kelola Event", path: "/daftarevent", icon: "bi-chat-left-text-fill" },
     { label: "Daftar Pengguna", path: "/daftaruser", icon: "bi-people-fill" },
     { label: "Daftar Ulasan", path: "/daftarulasan", icon: "bi bi-chat-left-heart-fill" },
@@ -69,45 +70,47 @@ const AdminNavbar = ({ isShifted }) => {
 
   return (
     <>
-      <nav className="bg-white navbar navbar-light shadow-sm py-3 sticky-top" 
-      style={{ 
-        // height:70,
-        borderBottom: '2px solid #ccc',
-         zIndex: 999,
+      <nav className="bg-white navbar navbar-light shadow-sm py-3 sticky-top"
+        style={{
+          // height:70,
+          borderBottom: '2px solid #ccc',
+          zIndex: 999,
           marginLeft: isShifted ? "10px" : "0",
-           transition: "margin-left 0.3s",
-         }}>
+          transition: "margin-left 0.3s",
+        }}>
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <button className="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
             <span className="navbar-toggler-icon"></span>
           </button>
 
-  <div className="d-none d-lg-block text-muted ms-3 mt-3">
-      <p>
-        Portal Admin / {menuItems.find((item) => item.path === currentPath)?.label || currentPath}
-      </p>
-    </div>
+          <div className="d-none d-lg-block text-muted ms-3 mt-3">
+            <p>
+              Portal Admin / {menuItems.find((item) => item.path === currentPath)?.label || currentPath}
+            </p>
+          </div>
 
           <button className="navbar-brand btn d-lg-none position-absolute top-50 start-50 translate-middle d-flex align-items-center" onClick={() => handleNavigate('/dashboard')}>
             <img src={logo} alt="Logo" width="30" height="30" className="me-2" />
             Portal Admin
           </button>
 
-<div className="d-none d-lg-block" 
-style={{ position: 'relative',
- zIndex: 1050, 
- right:25 }}>
-  <ProfilModal
-    inline
-    onClose={() => setShowProfilModal(false)}
-  />
-</div>
+          <div className="d-none d-lg-block"
+            style={{
+              position: 'relative',
+              zIndex: 1050,
+              right: 25
+            }}>
+            <ProfilModal
+              inline
+              onClose={() => setShowProfilModal(false)}
+            />
+          </div>
 
           <LogoutModal
-        show={showLogoutModal}
-        onClose={() => setShowLogoutModal(false)}
-        onConfirm={handleLogout}
-      />
+            show={showLogoutModal}
+            onClose={() => setShowLogoutModal(false)}
+            onConfirm={handleLogout}
+          />
         </div>
       </nav>
 
@@ -142,50 +145,50 @@ style={{ position: 'relative',
                     className="d-flex align-items-center w-100 border-0 bg-transparent"
                     onClick={() => handleNavigate(item.path)}
                     style={{
-                  
-                  borderRadius: '4px',
-                  padding: '8px',
-                  marginBottom: '5px',
-                  transition: 'background-color 0.2s, color 0.2s',
-                  backgroundColor: isActive ? '#015E78' : 'transparent',
-                  color: isActive ? '#015E78' : '#000',
-                  fontWeight: isActive ? 'bold' : 'normal',
-                  textDecoration: 'none',
-                  fontSize: '18px',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = '#015E78';
-                    e.currentTarget.style.color = '#666';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#000';
-                  }
-                }}
-              >
-                <i className={`bi ${item.icon} me-2`}></i>
+
+                      borderRadius: '4px',
+                      padding: '8px',
+                      marginBottom: '5px',
+                      transition: 'background-color 0.2s, color 0.2s',
+                      backgroundColor: isActive ? '#015E78' : 'transparent',
+                      color: isActive ? '#015E78' : '#000',
+                      fontWeight: isActive ? 'bold' : 'normal',
+                      textDecoration: 'none',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = '#015E78';
+                        e.currentTarget.style.color = '#666';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#000';
+                      }
+                    }}
+                  >
+                    <i className={`bi ${item.icon} me-2`}></i>
                     {item.label}
                   </button>
                 </li>
               );
             })}
-            
-            
+
+
             <li className="nav-item mt-3 d-lg-none">
-           <button
-  className="btn btn-outline-danger w-100"
-  onClick={() => {
-    closeSidebar();
-    setShowLogoutModal(true);
-  }}
->
-  <i className="bi bi-box-arrow-right" style={{marginRight: 5, fontSize:20}}></i>
-  Logout
-</button>
+              <button
+                className="btn btn-outline-danger w-100"
+                onClick={() => {
+                  closeSidebar();
+                  setShowLogoutModal(true);
+                }}
+              >
+                <i className="bi bi-box-arrow-right" style={{ marginRight: 5, fontSize: 20 }}></i>
+                Logout
+              </button>
             </li>
           </ul>
         </div>

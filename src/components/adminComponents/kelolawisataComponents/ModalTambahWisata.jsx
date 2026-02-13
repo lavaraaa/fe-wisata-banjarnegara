@@ -20,20 +20,33 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
   const [kodewilayah, setKodewilayah] = useState('');
 
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
+  const [daftarKategori, setDaftarKategori] = useState([]);
+  const [loadingKategori, setLoadingKategori] = useState(false);
   const [galeriFiles, setGaleriFiles] = useState([]);
   const { showNotif } = useNotifikasi();
-  const daftarKategori = [
-    'Dieng',
-    'Wisata Alam',
-    'Curug/Air Terjun',
-    'Wisata Budaya',
-    'Wisata Rekreasi',
-    'Wisata Kuliner',
-    'Wisata Edukasi',
-    'Waduk',
-    'Desa Wisata',
-    'Wisata Religi',
-  ];
+
+  // Fetch kategori dari API saat modal dibuka
+  useEffect(() => {
+    if (show) {
+      const fetchKategori = async () => {
+        try {
+          setLoadingKategori(true);
+          const token = localStorage.getItem('token');
+          const res = await axios.get('/api/admin/kategori', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = Array.isArray(res.data) ? res.data : [];
+          setDaftarKategori(data.map((k) => k.nama));
+        } catch (err) {
+          console.error('Gagal mengambil data kategori:', err);
+          setDaftarKategori([]);
+        } finally {
+          setLoadingKategori(false);
+        }
+      };
+      fetchKategori();
+    }
+  }, [show]);
 
   const handleKategoriChange = (e) => {
     const { value, checked } = e.target;
@@ -101,7 +114,15 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
       handleClose();
     } catch (error) {
       console.error('Error adding wisata: ', error);
-      showNotif('Gagal menambahkan wisata.', 'error');
+      const resData = error.response?.data;
+      if (resData?.missing_kategori) {
+        showNotif(
+          `Kategori tidak ditemukan: ${resData.missing_kategori.join(', ')}. Tambahkan kategori terlebih dahulu.`,
+          'error'
+        );
+      } else {
+        showNotif('Gagal menambahkan wisata.', 'error');
+      }
     }
   };
 
@@ -174,19 +195,27 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
               <div className="mb-2">
                 <label className="form-label">Kategori (minimal 1)</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                  {daftarKategori.map((kategori, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                      <input
-                        type="checkbox"
-                        id={`kategori-${index}`}
-                        value={kategori}
-                        checked={kategoriTerpilih.includes(kategori)}
-                        onChange={handleKategoriChange}
-                        style={{ marginRight: '5px' }}
-                      />
-                      <label htmlFor={`kategori-${index}`}>{kategori}</label>
-                    </div>
-                  ))}
+                  {loadingKategori ? (
+                    <span className="text-muted" style={{ fontSize: '14px' }}>Memuat kategori...</span>
+                  ) : daftarKategori.length === 0 ? (
+                    <span className="text-danger" style={{ fontSize: '14px' }}>
+                      Belum ada kategori. Silakan tambahkan di menu Kategori Wisata.
+                    </span>
+                  ) : (
+                    daftarKategori.map((kategori, index) => (
+                      <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                          type="checkbox"
+                          id={`kategori-${index}`}
+                          value={kategori}
+                          checked={kategoriTerpilih.includes(kategori)}
+                          onChange={handleKategoriChange}
+                          style={{ marginRight: '5px' }}
+                        />
+                        <label htmlFor={`kategori-${index}`}>{kategori}</label>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -506,7 +535,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
 
 
               {/* Latitude */}
-                 <div className="mb-2">
+              <div className="mb-2">
                 <label htmlFor="latitude" className="form-label">
                   Latitude
                 </label>
@@ -548,8 +577,8 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                   }}
                 />
               </div>
-           
-           {/* Kode Wilayah */}
+
+              {/* Kode Wilayah */}
               <div className="mb-2">
                 <label htmlFor="kode_wilayah" className="form-label">
                   Kode Wilayah
@@ -571,7 +600,7 @@ function ModalTambahWisata({ show, handleClose, onActionSuccess }) {
                 />
               </div>
             </div>
-            
+
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 type="button"
