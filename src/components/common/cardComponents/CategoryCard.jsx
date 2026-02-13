@@ -25,27 +25,15 @@ const CategoryCard = () => {
   const [kategoriList, setKategoriList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch kategori dari data wisata
+  // Fetch kategori dari endpoint public (tanpa token)
   useEffect(() => {
     const fetchKategori = async () => {
       try {
-        const res = await fetch('/api/wisata');
-        const wisataData = await res.json();
-        const semuaKategori = new Set();
-        (Array.isArray(wisataData) ? wisataData : []).forEach((item) => {
-          let kat = [];
-          try {
-            if (Array.isArray(item.kategori)) {
-              kat = item.kategori;
-            } else if (typeof item.kategori === 'string') {
-              kat = JSON.parse(item.kategori);
-            }
-          } catch { /* ignore */ }
-          kat.forEach((k) => semuaKategori.add(k));
-        });
-        const list = [...semuaKategori].sort().map((nama) => ({
-          nama,
-          gambar: gambarKategoriMap[nama] || defaultGambar,
+        const res = await fetch('/api/kategori');
+        const data = await res.json();
+        const list = (Array.isArray(data) ? data : []).map((item) => ({
+          nama: item.nama,
+          gambar: gambarKategoriMap[item.nama] || defaultGambar,
         }));
         setKategoriList(list);
       } catch (err) {

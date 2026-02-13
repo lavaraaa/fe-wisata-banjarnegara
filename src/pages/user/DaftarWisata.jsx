@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CardWisata from '../../components/common/cardComponents/CardWisata';
 import { Icon } from '@iconify/react';
@@ -14,24 +14,7 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [allWisata, setAllWisata] = useState([]);
   const [filteredWisata, setFilteredWisata] = useState([]);
   const [wisataList, setWisataList] = useState([]);
-
-  // Hitung daftar kategori secara dinamis dari data wisata
-  const daftarKategori = useMemo(() => {
-    const semuaKategori = new Set();
-    allWisata.forEach((item) => {
-      let kat = [];
-      try {
-        if (Array.isArray(item.kategori)) {
-          kat = item.kategori;
-        } else if (typeof item.kategori === 'string') {
-          kat = JSON.parse(item.kategori);
-        }
-      } catch { /* ignore */ }
-      kat.forEach((k) => semuaKategori.add(k));
-    });
-    return [...semuaKategori].sort();
-  }, [allWisata]);
-
+  const [daftarKategori, setDaftarKategori] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);
@@ -62,6 +45,21 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
       fetchDataWisata();
     }
   }, [data]);
+
+  // Fetch kategori dari endpoint public (tanpa token)
+  useEffect(() => {
+    const fetchKategori = async () => {
+      try {
+        const res = await fetch('/api/kategori');
+        const data = await res.json();
+        setDaftarKategori((Array.isArray(data) ? data : []).map((k) => k.nama));
+      } catch (err) {
+        console.error('Gagal memuat kategori:', err);
+        setDaftarKategori([]);
+      }
+    };
+    fetchKategori();
+  }, []);
 
   const fetchDataWisata = async () => {
     try {
