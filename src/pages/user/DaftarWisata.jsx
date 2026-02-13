@@ -1,19 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CardWisata from '../../components/common/cardComponents/CardWisata';
 import { Icon } from '@iconify/react';
 import Loading from '../../components/common/Loading';
 
-const daftarKategori = [
-  'Dieng',
-  'Wisata Alam',
-  'Curug/Air Terjun',
-  'Wisata Budaya',
-  'Wisata Rekreasi',
-  'Wisata Kuliner',
-  'Wisata Edukasi',
-  'Desa Wisata'
-];
 
 const sortOptions = [
   'Baru Ditambahkan',
@@ -24,6 +14,24 @@ const DaftarWisata = ({ data = [], onActionSuccess }) => {
   const [allWisata, setAllWisata] = useState([]);
   const [filteredWisata, setFilteredWisata] = useState([]);
   const [wisataList, setWisataList] = useState([]);
+
+  // Hitung daftar kategori secara dinamis dari data wisata
+  const daftarKategori = useMemo(() => {
+    const semuaKategori = new Set();
+    allWisata.forEach((item) => {
+      let kat = [];
+      try {
+        if (Array.isArray(item.kategori)) {
+          kat = item.kategori;
+        } else if (typeof item.kategori === 'string') {
+          kat = JSON.parse(item.kategori);
+        }
+      } catch { /* ignore */ }
+      kat.forEach((k) => semuaKategori.add(k));
+    });
+    return [...semuaKategori].sort();
+  }, [allWisata]);
+
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [kategoriTerpilih, setKategoriTerpilih] = useState([]);

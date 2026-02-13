@@ -1,22 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Diengcategory from '../../../assets/banner/1.png';
 import Wisatalamcategory from '../../../assets/category/Telaga Dringo.jpg'
 import Mricacategory from '../../../assets/category/MricaCategory.jpeg'
 import CurugCategory from '../../../assets/category/CurugCategory.jpeg'
 
-const kategoriList = [
-  { nama: 'Dieng', gambar: Diengcategory },
-  { nama: 'Wisata Alam', gambar: Wisatalamcategory },
-  { nama: 'Curug/Air Terjun', gambar: CurugCategory },
-  { nama: 'Wisata Budaya', gambar: Diengcategory },
-  { nama: 'Wisata Rekreasi', gambar: Diengcategory },
-  { nama: 'Wisata Kuliner', gambar: Diengcategory },
-  { nama: 'Wisata Edukasi', gambar: Diengcategory },
-  { nama: 'Wisata Religi', gambar: Diengcategory },
-  { nama: 'Waduk', gambar: Mricacategory },
-  { nama: 'Desa Wisata', gambar: Diengcategory },
-];
+// Mapping gambar khusus untuk kategori tertentu (fallback ke gambar default)
+const gambarKategoriMap = {
+  'Dieng': Diengcategory,
+  'Wisata Alam': Wisatalamcategory,
+  'Curug/Air Terjun': CurugCategory,
+  'Waduk': Mricacategory,
+};
+
+const defaultGambar = Diengcategory;
 
 const CategoryCard = () => {
   const navigate = useNavigate();
@@ -25,6 +22,41 @@ const CategoryCard = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [moved, setMoved] = useState(false);
+  const [kategoriList, setKategoriList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch kategori dari data wisata
+  useEffect(() => {
+    const fetchKategori = async () => {
+      try {
+        const res = await fetch('/api/wisata');
+        const wisataData = await res.json();
+        const semuaKategori = new Set();
+        (Array.isArray(wisataData) ? wisataData : []).forEach((item) => {
+          let kat = [];
+          try {
+            if (Array.isArray(item.kategori)) {
+              kat = item.kategori;
+            } else if (typeof item.kategori === 'string') {
+              kat = JSON.parse(item.kategori);
+            }
+          } catch { /* ignore */ }
+          kat.forEach((k) => semuaKategori.add(k));
+        });
+        const list = [...semuaKategori].sort().map((nama) => ({
+          nama,
+          gambar: gambarKategoriMap[nama] || defaultGambar,
+        }));
+        setKategoriList(list);
+      } catch (err) {
+        console.error('Gagal memuat kategori:', err);
+        setKategoriList([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchKategori();
+  }, []);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -50,12 +82,20 @@ const CategoryCard = () => {
     }
   };
 
+  if (loading) {
+    return <div className="text-center py-3 text-muted">Memuat kategori...</div>;
+  }
+
+  if (kategoriList.length === 0) {
+    return null;
+  }
+
   return (
     <div
       ref={scrollRef}
       className="d-flex px-3"
       style={{
-        gap:'clamp(1px, 2vw, 12px)',
+        gap: 'clamp(1px, 2vw, 12px)',
         margin: '10px',
         overflowX: 'auto',
         scrollSnapType: 'x mandatory',
