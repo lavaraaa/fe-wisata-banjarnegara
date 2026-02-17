@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 // Palet warna gradient untuk kategori (berputar jika kategori lebih banyak)
 const gradientPalette = [
-  { from: '#11998e', to: '#38ef7d' },  // hijau tropis
-  { from: '#2193b0', to: '#6dd5ed' },  // biru laut
-  { from: '#cc2b5e', to: '#753a88' },  // ungu-pink
-  { from: '#ee9ca7', to: '#ffdde1' },  // pink pastel
-  { from: '#f7971e', to: '#ffd200' },  // emas sunset
-  { from: '#654ea3', to: '#eaafc8' },  // lavender
-  { from: '#00b4db', to: '#0083b0' },  // biru langit
-  { from: '#f953c6', to: '#b91d73' },  // magenta
+  { from: '#7BAE7F', to: '#A8D5A2' },  // hijau sage
+  { from: '#7CA1B3', to: '#A7C7D7' },  // biru dusty
+  { from: '#9B8AA6', to: '#C4B5CE' },  // ungu muda
+  { from: '#C4978A', to: '#DBBCB2' },  // coklat rosé
+  { from: '#C9A96E', to: '#DEC9A0' },  // emas kalem
+  { from: '#8A9BAE', to: '#B3C5D4' },  // biru baja
+  { from: '#B08E8E', to: '#D4B5B5' },  // pink dusty
+  { from: '#8DAA91', to: '#B5CCBA' },  // hijau mint
 ];
 
 const CategoryCard = () => {
