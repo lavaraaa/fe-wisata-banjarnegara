@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 // Palet warna gradient untuk kategori (berputar jika kategori lebih banyak)
 const gradientPalette = [
-  { from: '#7BAE7F', to: '#A8D5A2' },  // hijau sage
-  { from: '#7CA1B3', to: '#A7C7D7' },  // biru dusty
-  { from: '#9B8AA6', to: '#C4B5CE' },  // ungu muda
-  { from: '#C4978A', to: '#DBBCB2' },  // coklat rosé
-  { from: '#C9A96E', to: '#DEC9A0' },  // emas kalem
-  { from: '#8A9BAE', to: '#B3C5D4' },  // biru baja
-  { from: '#B08E8E', to: '#D4B5B5' },  // pink dusty
-  { from: '#8DAA91', to: '#B5CCBA' },  // hijau mint
+  { from: '#1a7a6d', to: '#2a9d8f' },  // teal utama (sesuai brand)
+  { from: '#264653', to: '#3a6b7e' },  // biru tua hutan
+  { from: '#2a6f5a', to: '#45a07a' },  // hijau hutan
+  { from: '#3d7ea6', to: '#5ba4ca' },  // biru danau
+  { from: '#4a7c59', to: '#6b9e7a' },  // hijau daun
+  { from: '#2c6975', to: '#4a9aa8' },  // biru laut
+  { from: '#3b6d4e', to: '#5e9472' },  // hijau perbukitan
+  { from: '#2e5e6e', to: '#4e8a9a' },  // biru petang
 ];
 
 const CategoryCard = () => {
