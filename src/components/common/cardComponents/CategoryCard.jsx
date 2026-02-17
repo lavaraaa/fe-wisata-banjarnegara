@@ -1,19 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Diengcategory from '../../../assets/banner/1.png';
-import Wisatalamcategory from '../../../assets/category/Telaga Dringo.jpg'
-import Mricacategory from '../../../assets/category/MricaCategory.jpeg'
-import CurugCategory from '../../../assets/category/CurugCategory.jpeg'
 
-// Mapping gambar khusus untuk kategori tertentu (fallback ke gambar default)
-const gambarKategoriMap = {
-  'Dieng': Diengcategory,
-  'Wisata Alam': Wisatalamcategory,
-  'Curug/Air Terjun': CurugCategory,
-  'Waduk': Mricacategory,
-};
-
-const defaultGambar = Diengcategory;
+// Palet warna gradient untuk kategori (berputar jika kategori lebih banyak)
+const gradientPalette = [
+  { from: '#11998e', to: '#38ef7d' },  // hijau tropis
+  { from: '#2193b0', to: '#6dd5ed' },  // biru laut
+  { from: '#cc2b5e', to: '#753a88' },  // ungu-pink
+  { from: '#ee9ca7', to: '#ffdde1' },  // pink pastel
+  { from: '#f7971e', to: '#ffd200' },  // emas sunset
+  { from: '#654ea3', to: '#eaafc8' },  // lavender
+  { from: '#00b4db', to: '#0083b0' },  // biru langit
+  { from: '#f953c6', to: '#b91d73' },  // magenta
+];
 
 const CategoryCard = () => {
   const navigate = useNavigate();
@@ -33,7 +31,6 @@ const CategoryCard = () => {
         const data = await res.json();
         const list = (Array.isArray(data) ? data : []).map((item) => ({
           nama: item.nama,
-          gambar: gambarKategoriMap[item.nama] || defaultGambar,
         }));
         setKategoriList(list);
       } catch (err) {
@@ -98,52 +95,82 @@ const CategoryCard = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      {kategoriList.map(({ nama, gambar }, idx) => (
-        <div
-          key={idx}
-          onClick={() => handleClick(nama)}
-          style={{
-            flex: '0 0 auto',
-            width: 'clamp(100px, 8vw, 130px)',
-            height: 'clamp(100px, 8vw, 130px)',
-            position: 'relative',
-            scrollSnapAlign: 'start',
-            borderRadius: '10px',
-            overflow: 'hidden',
-          }}
-        >
-          <img
-            src={gambar}
-            alt={nama}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
+      {kategoriList.map(({ nama }, idx) => {
+        const gradient = gradientPalette[idx % gradientPalette.length];
+        return (
           <div
+            key={idx}
+            onClick={() => handleClick(nama)}
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              flex: '0 0 auto',
+              width: 'clamp(100px, 8vw, 130px)',
+              height: 'clamp(100px, 8vw, 130px)',
+              position: 'relative',
+              scrollSnapAlign: 'start',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             }}
-          />
-          <div
-            className="position-absolute top-50 start-50 translate-middle text-white fw-bold text-center"
-            style={{
-              padding: '5px 10px',
-              borderRadius: '8px',
-              fontSize: 'clamp(14px, 2vw, 20px)',
-              width: '80%',
+            onMouseEnter={(e) => {
+              if (!isDragging) {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
             }}
           >
-            {nama}
+            {/* Elemen dekoratif lingkaran */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '-20%',
+                right: '-20%',
+                width: '70%',
+                height: '70%',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.15)',
+                pointerEvents: 'none',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '-15%',
+                left: '-15%',
+                width: '50%',
+                height: '50%',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.1)',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Nama kategori */}
+            <div
+              style={{
+                position: 'relative',
+                zIndex: 1,
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: 'clamp(12px, 1.8vw, 16px)',
+                textAlign: 'center',
+                padding: '5px 8px',
+                lineHeight: 1.3,
+                textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+              }}
+            >
+              {nama}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
