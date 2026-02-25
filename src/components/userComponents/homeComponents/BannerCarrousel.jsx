@@ -12,7 +12,7 @@ import Banner2 from '../../../assets/banner/2.jpg';
 
 const Home = () => {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 992);
-  const bannerImages = [Banner1, Banner2, Banner3, Banner4, Banner5, Banner6];
+  const bannerImages = [Banner1, Banner2];
 
 useEffect(() => {
   const handleResize = () => {
