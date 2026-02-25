@@ -92,7 +92,6 @@ useEffect(() => {
               Ditambahkan pada : {formatTanggalLengkap(wisata.created_at)}
             </p>
           </div>
-          {/* <EventWisata/> */}
           <JamTiketNoTelepon/>
           <KategoriFasilitasAlamat />
           <DeskripsiWisata />
@@ -115,9 +114,8 @@ useEffect(() => {
   </p>
   <WisataLainnya/>
 </div>
-
-        </div>
-      </div>
+</div>
+</div>
 
       {user?.role === 'admin' && (
       <ButtonEditWisata/>)}
