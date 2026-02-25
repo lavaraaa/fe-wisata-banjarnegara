@@ -3,7 +3,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../../assets/banner/1.jpg';
-import Banner2 from '../../../assets/banner/2.png';
+import Banner2 from '../../../assets/banner/2.jpg';
 import Banner3 from '../../../assets/banner/3.png';
 import Banner4 from '../../../assets/banner/4.png';
 import Banner5 from '../../../assets/banner/5.png';
