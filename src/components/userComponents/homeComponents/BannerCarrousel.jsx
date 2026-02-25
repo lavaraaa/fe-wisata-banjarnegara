@@ -4,10 +4,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useNavigate } from 'react-router-dom';
 import Banner1 from '../../../assets/banner/1.jpg';
 import Banner2 from '../../../assets/banner/2.jpg';
-import Banner3 from '../../../assets/banner/3.jpg';
-import Banner4 from '../../../assets/banner/4.png';
-import Banner5 from '../../../assets/banner/5.png';
-import Banner6 from '../../../assets/banner/10.png';
+// import Banner3 from '../../../assets/banner/3.jpg';
+// import Banner4 from '../../../assets/banner/4.png';
+// import Banner5 from '../../../assets/banner/5.png';
+// import Banner6 from '../../../assets/banner/10.png';
 // import gambar from '../../assets/pngtree-tourists-travel-tourist-guide-person-picture-image_8727144.png';
 
 const Home = () => {
