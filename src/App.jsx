@@ -29,7 +29,7 @@ import DetailWisata from "./pages/user/DetailWisata";
 import DaftarWisata from "./pages/user/DaftarWisata";
 import LihatProfil from './pages/user/LihatProfil'
 import UlasanModal from "./components/userComponents/detailwisataComponents/UlasanComponents/UlasanModal";
-import ButtonChatbot from "./components/chatbotComponents/ButtonChatbot";
+// import ButtonChatbot from "./components/chatbotComponents/ButtonChatbot";
 
 
 function App() {
@@ -77,7 +77,7 @@ function App() {
           <Route path="/ulasanmodal/:id" element={<UlasanModal />} />
         </Routes>
       </div>
-      <ButtonChatbot />
+      {/* <ButtonChatbot /> */}
       <Footer />
     </div>
   );
